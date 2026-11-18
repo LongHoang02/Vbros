@@ -1,0 +1,1570 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VBros — Spotted there. Carried here.</title>
+<meta name="description" content="VBros: pre-order loot from Amsterdam and Sài Gòn. Bro to bro.">
+<meta name="theme-color" content="#08080A">
+<style>
+/* ---------------------------------------------------------------------
+   FONTS — embedded subsets (Latin + Vietnamese), no external requests.
+   "Saira Condensed" = Saira variable font (google/fonts, OFL) instanced
+   at width 75 (= Condensed): 600 / 800 / 900 upright + 900 real italic.
+   Be Vietnam Pro 400 / 500 / 700 (google/fonts, OFL).
+   --------------------------------------------------------------------- */
+/*@@FONTS@@*/
+
+/* ---------------------------------------------------------------------
+   TOKENS — "Season Pass" HUD look
+   --------------------------------------------------------------------- */
+:root {
+  --bg: #08080A;
+  --panel: #111114;
+  --panel-2: #17171B;
+  --line: #26262C;
+  --line-2: #34343C;
+  --tx: #F2F2F2;
+  --tx-2: #C8C8D0;
+  --mut: #A0A0AA;
+  --lime: #C6FF3D;
+  --lime-2: #E4FF9E;
+  --pink: #FF2E88;
+  --pink-2: #FF5FA2;
+  --sky: #7FD4FF;
+  --yel: #FFD23F;
+  /* rarity */
+  --r-common: #A0A0AA;
+  --r-rare: #7FD4FF;
+  --r-epic: #FF2E88;
+  --r-legendary: #FFD23F;
+  /* cities */
+  --sgn: #FF5FA2;
+  --ams: #7FD4FF;
+
+  --disp: "Saira Condensed", "Arial Narrow", "Roboto Condensed", system-ui, sans-serif;
+  --body: "Be Vietnam Pro", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --cut: polygon(0 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%);
+  --slant: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+  --wrap: 1240px;
+  --pad: clamp(16px, 4vw, 24px);
+}
+
+/* ---------------------------------------------------------------------
+   BASE
+   --------------------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; scroll-padding-top: 120px; }
+body {
+  margin: 0; background-color: var(--bg); color: var(--tx);
+  font-family: var(--body); font-size: 16px; line-height: 1.55;
+  font-synthesis: none; /* never fake bold/italic */
+  background-image:
+    linear-gradient(rgba(198,255,61,.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(198,255,61,.05) 1px, transparent 1px);
+  background-size: 48px 48px;
+  overflow-x: hidden;
+}
+img, svg { display: block; max-width: 100%; }
+h1, h2, h3, h4, p, ul, ol, figure { margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+a { color: var(--lime); }
+a:hover { color: var(--lime-2); }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+[hidden] { display: none !important; }
+:focus-visible { outline: 3px solid var(--lime); outline-offset: 3px; }
+.sr-only { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+.wrap { max-width: var(--wrap); margin: 0 auto; padding-left: var(--pad); padding-right: var(--pad); }
+.ico { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: square; stroke-linejoin: miter; flex: none; }
+.emoji { font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif; font-style: normal; }
+
+.disp { font-family: var(--disp); font-weight: 900; font-style: italic; text-transform: uppercase; line-height: .92; letter-spacing: -.005em; }
+.lbl { font-family: var(--disp); font-weight: 800; font-size: 14px; letter-spacing: .16em; text-transform: uppercase; line-height: 1.2; }
+.muted { color: var(--mut); }
+.small { font-size: 13px; color: var(--mut); }
+
+.skip { position: absolute; left: 12px; top: -60px; z-index: 100; background: var(--lime); color: var(--bg); padding: 10px 14px; font-family: var(--disp); font-weight: 800; text-transform: uppercase; letter-spacing: .08em; text-decoration: none; }
+.skip:focus { top: 12px; }
+
+/* ---------------------------------------------------------------------
+   BUTTONS — slanted cut corners
+   --------------------------------------------------------------------- */
+.btn {
+  --b: var(--lime); --bt: var(--bg);
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 48px; padding: 12px 28px; border: 0;
+  background: var(--b); color: var(--bt); text-decoration: none;
+  font-family: var(--disp); font-weight: 900; font-size: 20px; line-height: 1; letter-spacing: .08em; text-transform: uppercase;
+  clip-path: var(--slant);
+  transition: background-color .15s, transform .1s;
+}
+.btn:hover { background: var(--lime-2); color: var(--bt); }
+.btn:active { transform: translateY(1px); }
+.btn:focus-visible { clip-path: none; outline: 3px solid var(--tx); outline-offset: 3px; }
+.btn--ghost { background: transparent; color: var(--tx); box-shadow: inset 0 0 0 2px var(--tx); clip-path: none; font-weight: 800; }
+.btn--ghost:hover { background: var(--tx); color: var(--bg); }
+.btn--pink { --b: var(--pink); }
+.btn--pink:hover { background: var(--pink-2); }
+.btn--sm { min-height: 44px; padding: 9px 18px; font-size: 17px; }
+.btn--block { width: 100%; }
+.btn[disabled] { background: transparent; color: var(--mut); box-shadow: inset 0 0 0 1px var(--line-2); clip-path: none; cursor: not-allowed; font-weight: 800; }
+.btn.slap { animation: slap .32s ease-out; }
+@keyframes slap { 0% { transform: scale(1); } 40% { transform: scale(.94) skewX(-4deg); } 100% { transform: scale(1); } }
+
+.linkbtn { background: none; border: 0; padding: 4px 0; min-height: 44px; min-width: 44px; color: var(--tx-2); text-decoration: underline; text-underline-offset: 3px; font-size: 14px; }
+.linkbtn:hover { color: var(--lime); }
+
+.iconbtn { position: relative; display: inline-grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 1px solid var(--line); background: var(--panel); color: var(--tx); }
+.iconbtn:hover { border-color: var(--tx-2); }
+.iconbtn .ico { width: 20px; height: 20px; }
+.badge { position: absolute; top: -7px; right: -7px; min-width: 20px; height: 20px; padding: 0 5px; display: grid; place-items: center; background: var(--lime); color: var(--bg); font-family: var(--disp); font-weight: 900; font-size: 13px; line-height: 1; }
+.badge[data-n="0"] { display: none; }
+.badge.bump { animation: bump .35s ease-out; }
+@keyframes bump { 40% { transform: scale(1.35); } }
+
+/* ---------------------------------------------------------------------
+   HEADER
+   --------------------------------------------------------------------- */
+.hdr { position: sticky; top: 0; z-index: 20; background: rgba(8,8,10,.92); border-bottom: 1px solid var(--line); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+.hdr__row { display: flex; align-items: center; gap: 12px; min-height: 64px; }
+.logo { display: flex; align-items: center; gap: 8px; min-height: 44px; text-decoration: none; color: var(--tx); flex: none; }
+.logo__mark { background: var(--lime); color: var(--bg); font-family: var(--disp); font-weight: 900; font-style: italic; font-size: 30px; line-height: 1; padding: 6px 18px 4px 10px; clip-path: polygon(0 0, 100% 0, 86% 100%, 0 100%); letter-spacing: .01em; }
+.logo__s { font-family: var(--disp); font-weight: 600; font-size: 13px; letter-spacing: .2em; color: var(--mut); border: 1px solid var(--line-2); padding: 3px 5px 2px 7px; }
+.logo:hover { color: var(--tx); }
+.logo:hover .logo__mark { background: var(--lime-2); }
+.nav { display: none; gap: 10px; margin-left: 12px; font-family: var(--disp); font-weight: 800; font-size: 17px; letter-spacing: .08em; text-transform: uppercase; }
+.nav a, .subnav a { display: inline-block; color: var(--tx); text-decoration: none; padding: 11px 6px 9px; border-bottom: 3px solid transparent; white-space: nowrap; }
+.nav a:hover, .subnav a:hover { color: var(--lime); border-bottom-color: var(--lime); }
+.tools { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+.lang { display: flex; }
+.lang button { min-width: 44px; height: 44px; padding: 0 8px; border: 1px solid var(--line); background: transparent; color: var(--mut); font-family: var(--disp); font-weight: 800; font-size: 15px; letter-spacing: .06em; }
+.lang button + button { border-left: 0; }
+.lang button[aria-pressed="true"] { background: var(--tx); color: var(--bg); border-color: var(--tx); }
+.lang button:hover:not([aria-pressed="true"]) { color: var(--tx); }
+.loadout { position: relative; display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 16px 0 14px; border: 0; background: var(--pink); color: var(--bg); font-family: var(--disp); font-weight: 900; font-size: 17px; letter-spacing: .08em; text-transform: uppercase; clip-path: var(--slant); }
+.loadout:hover { background: var(--pink-2); }
+.loadout:focus-visible { clip-path: none; outline: 3px solid var(--tx); outline-offset: 3px; }
+.loadout__lbl { display: none; }
+.loadout__n { min-width: 1ch; font-variant-numeric: tabular-nums; }
+.subnav { display: flex; gap: 8px; overflow-x: auto; padding: 0 calc(var(--pad) - 6px); border-top: 1px solid var(--line); font-family: var(--disp); font-weight: 800; font-size: 15px; letter-spacing: .08em; text-transform: uppercase; scrollbar-width: none; }
+.subnav::-webkit-scrollbar { display: none; }
+.subnav a { display: inline-block; padding: 11px 6px 9px; }
+@media (max-width: 419px) { .logo__s { display: none; } .hdr__row { gap: 8px; } .tools { gap: 4px; } .lang button { min-width: 44px; padding: 0 4px; } .loadout { padding: 0 12px 0 12px; } .logo__mark { font-size: 27px; } }
+@media (max-width: 374px) { .lang button { min-width: 38px; } }
+@media (max-width: 359px) { .logo__mark { font-size: 24px; padding: 6px 14px 4px 8px; } .lang button { min-width: 34px; padding: 0 4px; font-size: 14px; } .iconbtn { width: 40px; } .loadout { padding: 0 10px; gap: 6px; } }
+@media (min-width: 520px) { .loadout__lbl { display: inline; } }
+@media (min-width: 1080px) { .nav { display: flex; } .subnav { display: none; } }
+
+/* ---------------------------------------------------------------------
+   HERO
+   --------------------------------------------------------------------- */
+.hero { position: relative; padding: clamp(28px, 6vw, 64px) 0 clamp(36px, 6vw, 56px); overflow: hidden; }
+.hero__grid { display: grid; gap: 32px; align-items: end; }
+.hero__main { position: relative; min-width: 0; display: flex; flex-direction: column; gap: 18px; }
+.season { display: inline-flex; align-items: center; gap: 10px; color: var(--pink-2); font-size: 15px; }
+.season__dot { width: 9px; height: 9px; background: var(--pink); flex: none; box-shadow: 0 0 0 4px rgba(255,46,136,.18); }
+.hero__mark {
+  position: relative; display: block; width: fit-content; margin: 4px 0 0; padding-right: .06em;
+  font-family: var(--disp); font-weight: 900; font-style: italic; line-height: .78; letter-spacing: -.01em;
+  font-size: clamp(104px, 34vw, 250px);
+  color: transparent; -webkit-text-stroke: 2px var(--lime);
+  user-select: none;
+}
+.hero__mark::after { /* small HUD tag glued to the wordmark */
+  content: "S01"; position: absolute; top: .12em; left: calc(100% - .2em);
+  font-size: 15px; font-style: normal; font-weight: 800; letter-spacing: .2em; line-height: 1;
+  -webkit-text-stroke: 0; color: var(--bg); background: var(--lime); padding: 4px 6px 3px 8px;
+}
+.hero h1 { font-size: clamp(52px, 16.5vw, 150px); line-height: .84; margin-top: -0.12em; position: relative; }
+.hero h1 span { display: block; }
+.hero h1 .l2 { color: var(--lime); }
+:lang(vi) .hero h1 { font-size: clamp(44px, 14.5vw, 116px); line-height: 1.14; margin-top: .1em; } /* room for stacked accents (Ầ, Ề) */
+.hero__sub { max-width: 56ch; font-size: clamp(16px, 2.2vw, 19px); color: var(--tx-2); }
+.hero__cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 4px; }
+
+/* HUD */
+.hud { min-width: 0; display: grid; gap: 12px; }
+.hud__box { position: relative; border: 1px solid var(--lime); background: rgba(198,255,61,.06); padding: 16px 18px 14px; display: grid; gap: 6px; }
+.hud__box::before, .hud__box::after { content: ""; position: absolute; width: 12px; height: 12px; border: 3px solid var(--lime); }
+.hud__box::before { top: -3px; left: -3px; border-right: 0; border-bottom: 0; }
+.hud__box::after { bottom: -3px; right: -3px; border-left: 0; border-top: 0; }
+.hud__lbl { color: var(--lime); font-size: 13px; }
+.cd { display: flex; align-items: flex-start; gap: 4px; font-family: var(--disp); font-weight: 900; font-variant-numeric: tabular-nums; }
+.cd__seg { display: grid; justify-items: start; }
+.cd__n { font-size: clamp(46px, 13vw, 64px); line-height: 1; letter-spacing: .01em; }
+.cd__u { font-family: var(--body); font-weight: 400; font-size: 12px; color: var(--mut); letter-spacing: 0; text-transform: lowercase; }
+.cd__sep { font-size: clamp(40px, 11vw, 56px); line-height: 1; color: var(--line-2); }
+.hud__for { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; font-size: 14px; color: var(--tx-2); }
+.hud__for button { background: none; border: 0; padding: 0; min-height: 44px; color: var(--tx); font-weight: 700; text-decoration: underline; text-decoration-color: var(--lime); text-underline-offset: 3px; text-align: left; }
+.hud__for button:hover { color: var(--lime); }
+.clocks { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.clock { border: 1px solid var(--line); background: var(--panel); padding: 12px 14px; display: grid; gap: 0; }
+.clock__code { font-size: 13px; }
+.clock__t { font-family: var(--disp); font-weight: 900; font-size: 38px; line-height: 1.05; font-variant-numeric: tabular-nums; }
+.clock__city { font-size: 12px; color: var(--mut); }
+.clock--sgn .clock__code { color: var(--sgn); }
+.clock--ams .clock__code { color: var(--ams); }
+.route { border: 1px solid var(--line); background: var(--panel); padding: 12px 14px; display: grid; gap: 6px; }
+.route__row { display: flex; align-items: center; gap: 10px; font-family: var(--disp); font-weight: 900; font-size: 18px; letter-spacing: .08em; }
+.route svg { flex: 1; height: 16px; min-width: 0; overflow: visible; }
+.route__pkt { animation: pkt 3.2s linear infinite; }
+@keyframes pkt { from { stroke-dashoffset: 26; } to { stroke-dashoffset: -206; } }
+.route__note { font-size: 12px; color: var(--mut); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2px 12px; }
+
+@media (min-width: 960px) {
+  .hero__grid { grid-template-columns: minmax(0, 1fr) 360px; gap: 48px; }
+  .hud { padding-bottom: 6px; }
+}
+
+/* ---------------------------------------------------------------------
+   SECTIONS
+   --------------------------------------------------------------------- */
+.sec { padding: clamp(40px, 7vw, 72px) 0; }
+.sec + .sec { border-top: 1px solid var(--line); }
+.sec__head { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 10px 24px; margin-bottom: 22px; }
+.sec__head h2 { font-size: clamp(40px, 8vw, 64px); max-width: 18ch; }
+.sec__head p { max-width: 52ch; color: var(--tx-2); }
+.sec__kicker { display: block; margin-bottom: 8px; }
+:lang(vi) .sec__head h2 { line-height: 1.16; padding-top: .14em; }
+:lang(vi) .card__title, :lang(vi) .step h3, :lang(vi) .line__name, :lang(vi) .player__name { line-height: 1.15; }
+
+/* ---------------------------------------------------------------------
+   FILTERS
+   --------------------------------------------------------------------- */
+.filters { display: grid; gap: 10px; margin-bottom: 18px; }
+.frow { display: flex; align-items: center; gap: 8px; overflow-x: auto; padding: 2px 2px 6px; margin: 0 -2px; scrollbar-width: thin; scrollbar-color: var(--line-2) transparent; }
+.frow__lbl { flex: none; color: var(--mut); font-size: 12px; min-width: 56px; }
+@media (min-width: 640px) { .vis { height: 158px; } .frow__lbl { min-width: 64px; } }
+.fbtn { flex: none; display: inline-flex; align-items: center; gap: 7px; min-height: 44px; padding: 6px 13px; border: 1px solid var(--line-2); background: var(--panel); color: var(--tx-2); font-family: var(--disp); font-weight: 800; font-size: 15px; letter-spacing: .07em; text-transform: uppercase; white-space: nowrap; }
+.fbtn:hover { color: var(--tx); border-color: var(--mut); }
+.fbtn[aria-pressed="true"] { background: var(--tx); border-color: var(--tx); color: var(--bg); }
+.fbtn__gem { width: 10px; height: 10px; background: var(--rc, var(--mut)); transform: rotate(45deg); flex: none; }
+.fbtn[data-r][aria-pressed="true"] { background: var(--rc); border-color: var(--rc); }
+.fbtn[data-r][aria-pressed="true"] .fbtn__gem { background: var(--bg); }
+.count { color: var(--mut); font-size: 13px; margin: 0 0 14px; }
+
+/* ---------------------------------------------------------------------
+   LOOT CARDS
+   --------------------------------------------------------------------- */
+.r-common { --rc: var(--r-common); --rt: rgba(160,160,170,.10); --rg: transparent; }
+.r-rare { --rc: var(--r-rare); --rt: rgba(127,212,255,.12); --rg: transparent; }
+.r-epic { --rc: var(--r-epic); --rt: rgba(255,46,136,.14); --rg: rgba(255,46,136,.16); }
+.r-legendary { --rc: var(--r-legendary); --rt: rgba(255,210,63,.14); --rg: rgba(255,210,63,.22); }
+
+.grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 272px), 1fr)); }
+.card { position: relative; min-width: 0; display: flex; flex-direction: column; gap: 12px; padding: 16px; background: var(--panel); border: 1px solid var(--line); border-top: 4px solid var(--rc); box-shadow: 0 -10px 40px -18px var(--rg); }
+.card.r-legendary { background: linear-gradient(180deg, rgba(255,210,63,.07), transparent 140px), var(--panel); }
+.card__hd { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.tier { display: inline-flex; align-items: center; gap: 7px; color: var(--rc); font-size: 14px; }
+.tier__gem { width: 9px; height: 9px; background: var(--rc); transform: rotate(45deg); }
+.r-legendary .tier__gem { box-shadow: 0 0 10px var(--rc); }
+.route-tag { display: inline-flex; align-items: center; gap: 5px; color: var(--mut); font-size: 14px; letter-spacing: .12em; }
+.route-tag .ico { width: 10px; height: 10px; stroke-width: 3; }
+.route-tag .emoji { font-size: 13px; letter-spacing: 0; }
+
+.vis { position: relative; height: 136px; background: var(--rt); display: grid; place-items: center; clip-path: var(--cut); overflow: hidden; }
+.vis::before { /* faint scanlines inside the slot */
+  content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(0deg, rgba(255,255,255,.025) 0 1px, transparent 1px 4px); pointer-events: none;
+}
+.vis__code { position: absolute; left: 10px; bottom: -14px; font-family: var(--disp); font-weight: 900; font-style: italic; font-size: 104px; line-height: 1; color: transparent; -webkit-text-stroke: 1.5px var(--rc); opacity: .4; pointer-events: none; }
+.vis__emoji { position: relative; font-size: 70px; line-height: 1; filter: drop-shadow(0 8px 14px rgba(0,0,0,.45)); }
+.vis__spot { position: absolute; left: 10px; top: 10px; display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--tx-2); background: rgba(8,8,10,.72); padding: 3px 8px 3px 3px; }
+.heart { position: absolute; top: 8px; right: 8px; width: 44px; height: 44px; display: grid; place-items: center; padding: 0; border: 1px solid var(--line-2); background: rgba(8,8,10,.78); color: var(--tx); }
+.heart:hover { color: var(--pink-2); border-color: var(--pink-2); }
+.heart[aria-pressed="true"] { color: var(--pink); border-color: var(--pink); }
+.heart[aria-pressed="true"] .ico { fill: currentColor; }
+.heart.slap { animation: bump .35s ease-out; }
+
+.mono { display: inline-grid; place-items: center; width: 24px; height: 24px; background: var(--mc, var(--lime)); color: var(--bg); font-family: var(--disp); font-weight: 900; font-style: italic; font-size: 13px; line-height: 1; clip-path: polygon(0 0, 100% 0, 100% 72%, 72% 100%, 0 100%); flex: none; }
+.mono--md { width: 40px; height: 40px; font-size: 20px; }
+.mono--lg { width: 72px; height: 72px; font-size: 38px; }
+.m-duy { --mc: var(--lime); } .m-dan { --mc: var(--sky); } .m-tung { --mc: var(--pink); }
+
+.card__title { font-family: var(--disp); font-weight: 800; font-size: 25px; line-height: 1.02; text-transform: uppercase; letter-spacing: .01em; }
+.card__title button { background: none; border: 0; padding: 0; text-align: left; color: var(--tx); font: inherit; text-transform: inherit; letter-spacing: inherit; }
+.card__title button:hover { color: var(--rc); }
+.card__title button::after { content: ""; position: absolute; inset: 0; z-index: 0; } /* whole card opens the modal */
+.card .vis { z-index: 1; cursor: pointer; } /* clip-path makes .vis its own stacking context: lift it above the stretched title link */
+.card .btn { position: relative; z-index: 1; }
+.card__hype { font-size: 14px; color: var(--mut); line-height: 1.45; }
+.statline { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 13px; color: var(--tx-2); }
+.st { display: inline-flex; align-items: center; gap: 6px; font-family: var(--disp); font-weight: 800; font-size: 14px; letter-spacing: .1em; text-transform: uppercase; }
+.st::before { content: ""; width: 7px; height: 7px; background: currentColor; }
+.st--open { color: var(--lime); }
+.st--almost { color: var(--yel); }
+.st--shipping { color: var(--sky); }
+.st--soldout { color: var(--mut); }
+.left--soon { color: var(--yel); font-weight: 700; }
+.bar { height: 6px; background: var(--line); position: relative; }
+.bar__f { position: absolute; inset: 0 auto 0 0; background: var(--rc, var(--lime)); }
+.spots { display: grid; gap: 6px; }
+.spots__txt { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; color: var(--tx-2); }
+.spots__txt b { color: var(--tx); font-weight: 700; }
+.card__buy { margin-top: auto; display: flex; justify-content: space-between; align-items: center; gap: 10px; padding-top: 4px; }
+.price { display: grid; line-height: 1; }
+.price__eur { font-family: var(--disp); font-weight: 900; font-size: 32px; line-height: 1; }
+.price__vnd { font-size: 12px; color: var(--mut); margin-top: 3px; }
+.card .btn:not([disabled]) { --b: var(--rc); }
+.card .btn:not([disabled]):hover { filter: brightness(1.12); background: var(--rc); }
+.card.is-out .vis { filter: grayscale(.85); opacity: .7; }
+.empty-grid { grid-column: 1 / -1; padding: 28px; border: 1px dashed var(--line-2); color: var(--tx-2); }
+
+/* ---------------------------------------------------------------------
+   DROPS (squad chat, HUD style) + POLLS
+   --------------------------------------------------------------------- */
+.duo { display: grid; gap: 40px; }
+@media (min-width: 980px) { .duo { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 32px; align-items: start; } #polls { position: sticky; top: 90px; } }
+.pane { background: var(--panel); border: 1px solid var(--line); }
+.pane__hd { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--line); background: var(--panel-2); }
+.pane__hd .mono + .mono { margin-left: 3px; }
+.pane__title { font-family: var(--disp); font-weight: 800; font-size: 18px; letter-spacing: .08em; text-transform: uppercase; line-height: 1.1; }
+.pane__sub { font-size: 12px; color: var(--mut); }
+.feed { padding: 8px 16px 16px; display: grid; gap: 10px; }
+.daysep { display: flex; align-items: center; gap: 10px; color: var(--mut); font-family: var(--disp); font-weight: 800; font-size: 13px; letter-spacing: .16em; text-transform: uppercase; padding-top: 8px; }
+.daysep::before, .daysep::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+.msg { display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 10px; align-items: start; }
+.msg__body { border-left: 3px solid var(--cc); background: var(--ct); padding: 10px 12px; display: grid; gap: 8px; min-width: 0; }
+.msg--sgn { --cc: var(--sgn); --ct: rgba(255,46,136,.09); }
+.msg--ams { --cc: var(--ams); --ct: rgba(127,212,255,.08); }
+.msg__meta { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; }
+.msg__who { font-family: var(--disp); font-weight: 900; font-size: 18px; letter-spacing: .06em; text-transform: uppercase; line-height: 1; }
+.tagchip { font-family: var(--disp); font-weight: 800; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; padding: 3px 7px 2px; border: 1px solid var(--line-2); color: var(--tx-2); }
+.tag--just-landed { color: var(--lime); border-color: rgba(198,255,61,.5); }
+.tag--last-call { color: var(--yel); border-color: rgba(255,210,63,.5); }
+.tag--spotted { color: var(--pink-2); border-color: rgba(255,95,162,.5); }
+.tag--restock, .tag--shipping { color: var(--sky); border-color: rgba(127,212,255,.45); }
+.msg__text { font-size: 15px; line-height: 1.5; overflow-wrap: anywhere; }
+.msg__when { font-size: 12px; color: var(--mut); display: flex; flex-wrap: wrap; gap: 2px 8px; }
+.msg__when b { font-family: var(--disp); font-weight: 800; font-size: 13px; letter-spacing: .08em; color: var(--cc); }
+.feed__more { text-align: center; padding-top: 6px; }
+.mini { display: grid; grid-template-columns: 44px minmax(0, 1fr) auto; align-items: center; gap: 10px; width: 100%; text-align: left; padding: 6px 10px 6px 6px; background: var(--bg); border: 1px solid var(--line); border-left: 3px solid var(--rc); color: var(--tx); }
+.mini:hover { border-color: var(--rc); }
+.mini__vis { width: 44px; height: 44px; display: grid; place-items: center; background: var(--rt); font-size: 24px; clip-path: polygon(0 0, 100% 0, 100% 74%, 74% 100%, 0 100%); }
+.mini__txt { display: grid; min-width: 0; }
+.mini__name { font-family: var(--disp); font-weight: 800; font-size: 16px; letter-spacing: .03em; text-transform: uppercase; line-height: 1.15; overflow: hidden; overflow-wrap: break-word; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.mini__go { font-size: 12px; color: var(--rc); }
+.mini__price { font-family: var(--disp); font-weight: 900; font-size: 20px; }
+
+.polls { display: grid; gap: 16px; }
+.poll { padding: 18px; display: grid; gap: 12px; border-top: 3px solid var(--pc, var(--pink)); }
+.poll[data-dir="VN"] { --pc: var(--sgn); }
+.poll[data-dir="NL"] { --pc: var(--ams); }
+.poll__q { font-family: var(--disp); font-weight: 800; font-size: 26px; line-height: 1.05; text-transform: uppercase; }
+:lang(vi) .poll__q { line-height: 1.15; }
+.poll__opts { display: grid; gap: 8px; }
+.opt { position: relative; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 10px; min-height: 48px; padding: 8px 12px; background: var(--bg); border: 1px solid var(--line-2); color: var(--tx); text-align: left; overflow: hidden; }
+.opt:hover:not([aria-disabled="true"]) { border-color: var(--lime); }
+.opt[aria-disabled="true"] { cursor: default; }
+.opt__bar { position: absolute; left: 0; bottom: 0; height: 4px; width: 0; background: var(--line-2); transition: width .7s cubic-bezier(.2,.8,.2,1); }
+.opt.is-mine { border-color: var(--lime); }
+.opt.is-mine .opt__bar { background: var(--lime); }
+.opt__emoji { font-size: 20px; position: relative; }
+.opt__label { position: relative; font-size: 15px; }
+.opt__pct { position: relative; font-family: var(--disp); font-weight: 900; font-size: 20px; opacity: 0; }
+.is-voted .opt__pct { opacity: 1; }
+.opt.is-mine .opt__pct { color: var(--lime); }
+.opt__mine { font-size: 12px; color: var(--lime); }
+.poll__foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 12px; font-size: 13px; color: var(--mut); }
+.poll__thanks { color: var(--lime); font-weight: 700; }
+.poll__intro { color: var(--tx-2); margin: -8px 0 16px; max-width: 52ch; }
+
+/* ---------------------------------------------------------------------
+   HOW IT WORKS (a real sequence → numbered)
+   --------------------------------------------------------------------- */
+.steps { display: grid; gap: 12px; counter-reset: s; }
+@media (min-width: 640px) { .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1040px) { .steps { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.step { position: relative; background: var(--panel); border: 1px solid var(--line); padding: 18px 18px 20px; display: grid; gap: 8px; align-content: start; }
+.step__top { display: flex; align-items: center; justify-content: space-between; }
+.step__n { font-family: var(--disp); font-weight: 900; font-style: italic; font-size: 54px; line-height: .8; color: transparent; -webkit-text-stroke: 1.5px var(--lime); }
+.step__emoji { font-size: 28px; }
+.step h3 { font-family: var(--disp); font-weight: 800; font-size: 24px; text-transform: uppercase; line-height: 1.05; }
+.step p { font-size: 14px; color: var(--tx-2); }
+.step .bar { margin-top: 6px; height: 4px; }
+.steps-note { margin-top: 16px; display: flex; align-items: center; gap: 10px; color: var(--tx-2); font-size: 14px; }
+.steps-note .ico { color: var(--lime); }
+
+/* ---------------------------------------------------------------------
+   SQUAD
+   --------------------------------------------------------------------- */
+.squad { display: grid; gap: 28px; }
+@media (min-width: 980px) { .squad { grid-template-columns: minmax(0, .9fr) minmax(0, 1.4fr); gap: 40px; align-items: start; } }
+.story__text { color: var(--tx-2); font-size: 17px; max-width: 58ch; }
+.story__sig { margin-top: 18px; display: inline-flex; align-items: center; gap: 10px; color: var(--lime); }
+.players { display: grid; gap: 12px; }
+@media (min-width: 640px) { .players { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.player { position: relative; background: var(--panel); border: 1px solid var(--line); border-top: 4px solid var(--mc); padding: 16px; display: grid; gap: 10px; align-content: start; }
+.player__hd { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.player__city { display: grid; justify-items: end; text-align: right; font-size: 13px; color: var(--mut); line-height: 1.35; }
+.player__city b { font-family: var(--disp); font-weight: 800; letter-spacing: .12em; color: var(--mc); }
+.player__name { font-family: var(--disp); font-weight: 900; font-style: italic; font-size: 34px; line-height: .95; text-transform: uppercase; }
+.player__role { color: var(--mc); display: block; font-size: 15px; margin-top: 4px; font-weight: 900; }
+.player__handle { font-size: 14px; color: var(--tx-2); }
+.player__bio { font-size: 14px; color: var(--mut); }
+.player__time { display: flex; justify-content: space-between; font-size: 12px; color: var(--mut); border-top: 1px solid var(--line); padding-top: 8px; }
+.player__time b { font-family: var(--disp); font-weight: 900; font-size: 18px; color: var(--tx); font-variant-numeric: tabular-nums; }
+
+/* ---------------------------------------------------------------------
+   FOOTER
+   --------------------------------------------------------------------- */
+.ftr { border-top: 1px solid var(--line); background: rgba(8,8,10,.94); padding: 48px 0 28px; }
+.ftr__mark { font-family: var(--disp); font-weight: 900; font-style: italic; font-size: clamp(80px, 22vw, 200px); line-height: .8; color: var(--lime); letter-spacing: -.01em; }
+.ftr__grid { display: grid; gap: 28px; margin-top: 28px; }
+@media (min-width: 820px) { .ftr__grid { grid-template-columns: 1.3fr 1fr 1fr; } }
+.ftr h3 { margin-bottom: 8px; color: var(--mut); font-size: 13px; }
+.ftr__tag { font-family: var(--disp); font-weight: 800; font-size: 22px; text-transform: uppercase; letter-spacing: .04em; }
+.ftr__clock { display: flex; gap: 18px; font-family: var(--disp); font-weight: 900; font-size: 24px; font-variant-numeric: tabular-nums; }
+.ftr__clock .c-sgn { color: var(--sgn); } .ftr__clock .c-ams { color: var(--ams); }
+.ftr__legal { margin-top: 32px; padding-top: 16px; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; gap: 6px 22px; font-size: 13px; color: var(--mut); }
+.ftr__legal strong { color: var(--tx-2); font-weight: 500; flex-basis: 100%; }
+.mail { color: var(--tx); font-weight: 700; overflow-wrap: anywhere; }
+
+/* ---------------------------------------------------------------------
+   LAYERS (drawers + modals)
+   --------------------------------------------------------------------- */
+.layer { position: fixed; inset: 0; z-index: 50; display: none; }
+.layer.is-open { display: block; }
+.layer__scrim { position: absolute; inset: 0; background: rgba(4,4,6,.78); animation: fade .2s ease-out; }
+@keyframes fade { from { opacity: 0; } }
+.drawer { position: absolute; top: 0; right: 0; bottom: 0; width: min(440px, 100%); display: flex; flex-direction: column; background: var(--panel); border-left: 1px solid var(--line); border-top: 4px solid var(--pink); animation: slidein .25s cubic-bezier(.2,.8,.2,1); }
+#L-wish .drawer { border-top-color: var(--pink-2); }
+@keyframes slidein { from { transform: translateX(40px); opacity: 0; } }
+.modal { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(920px, calc(100% - 24px)); max-height: calc(100% - 24px); display: flex; flex-direction: column; background: var(--panel); border: 1px solid var(--line); border-top: 4px solid var(--lime); animation: pop .22s cubic-bezier(.2,.8,.2,1); }
+.modal--narrow { width: min(560px, calc(100% - 24px)); }
+@keyframes pop { from { opacity: 0; transform: translate(-50%, calc(-50% + 14px)); } }
+@media (max-width: 640px) {
+  .modal { left: 0; right: 0; top: auto; bottom: 0; transform: none; width: 100%; max-height: 94%; animation: up .25s cubic-bezier(.2,.8,.2,1); }
+  @keyframes up { from { transform: translateY(30px); opacity: 0; } }
+}
+.panel__head { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 14px 16px; border-bottom: 1px solid var(--line); }
+.panel__head h2 { font-size: 34px; }
+:lang(vi) .panel__head h2 { line-height: 1.16; }
+.panel__body { flex: 1; overflow-y: auto; padding: 16px; overscroll-behavior: contain; }
+.panel__foot { padding: 14px 16px 18px; border-top: 1px solid var(--line); display: grid; gap: 10px; }
+
+/* product modal */
+.pm { display: grid; }
+@media (min-width: 760px) { .pm { grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); } }
+.pm .vis { height: 100%; min-height: 240px; clip-path: none; }
+.pm .vis__emoji { font-size: 120px; }
+.pm .vis__code { font-size: 200px; bottom: -30px; }
+.pm__info { padding: 18px; display: grid; gap: 12px; align-content: start; }
+.pm__top { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.pm__name { font-size: clamp(36px, 7vw, 52px); }
+:lang(vi) .pm__name { line-height: 1.16; }
+.pm__hype { color: var(--rc); font-weight: 700; }
+.pm__desc { color: var(--tx-2); font-size: 15px; }
+.pm__row { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 12px; }
+.pm__actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.pm__spotted { display: flex; align-items: center; gap: 10px; padding-top: 12px; border-top: 1px solid var(--line); font-size: 14px; }
+.closes { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2px 12px; font-size: 13px; color: var(--tx-2); }
+.note { padding: 10px 12px; background: rgba(198,255,61,.07); border-left: 3px solid var(--lime); font-size: 14px; color: var(--tx-2); }
+.note--sky { background: rgba(127,212,255,.08); border-left-color: var(--sky); }
+.note--yel { background: rgba(255,210,63,.08); border-left-color: var(--yel); }
+
+/* cart lines */
+.line { display: grid; grid-template-columns: 52px minmax(0, 1fr) auto; gap: 6px 12px; padding: 12px 0; border-bottom: 1px solid var(--line); align-items: start; }
+.line .mini__vis { width: 52px; height: 52px; font-size: 28px; }
+.line__name { font-family: var(--disp); font-weight: 800; font-size: 19px; text-transform: uppercase; line-height: 1.05; }
+.line__meta { font-size: 12px; color: var(--mut); margin-top: 3px; display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: center; }
+.line__price { font-family: var(--disp); font-weight: 900; font-size: 20px; }
+.line__ctrl { grid-column: 2 / -1; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; }
+.qty { display: inline-flex; border: 1px solid var(--line-2); }
+.qty button { width: 44px; height: 44px; border: 0; background: var(--bg); font-size: 20px; line-height: 1; }
+.qty button:hover:not(:disabled) { background: var(--line); }
+.qty button:disabled { color: var(--line-2); cursor: not-allowed; }
+.qty output { min-width: 40px; display: grid; place-items: center; font-family: var(--disp); font-weight: 900; font-size: 18px; border-left: 1px solid var(--line-2); border-right: 1px solid var(--line-2); }
+.sum { display: grid; gap: 6px; }
+.sum__row { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; color: var(--tx-2); }
+.sum__row--total { color: var(--tx); font-family: var(--disp); font-weight: 900; font-size: 24px; text-transform: uppercase; letter-spacing: .03em; padding-top: 6px; border-top: 1px solid var(--line); }
+.emptyst { display: grid; justify-items: center; text-align: center; gap: 14px; padding: 28px 8px; color: var(--tx-2); }
+.emptyst h3 { font-family: var(--disp); font-weight: 800; font-size: 24px; text-transform: uppercase; color: var(--tx); }
+.emptyst svg { width: 100%; max-width: 220px; }
+
+/* forms */
+.co { display: grid; gap: 22px; }
+@media (min-width: 820px) { .co { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); align-items: start; } .co__side { position: sticky; top: 0; } }
+.form { display: grid; gap: 18px; }
+.fset { border: 0; padding: 0; margin: 0; display: grid; gap: 10px; min-width: 0; }
+.fset legend { font-family: var(--disp); font-weight: 800; font-size: 20px; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 8px; padding: 0; color: var(--lime); }
+.fields { display: grid; gap: 12px; }
+@media (min-width: 520px) { .fields--2 { grid-template-columns: 1fr 1fr; } .f--wide { grid-column: 1 / -1; } }
+.f { display: grid; gap: 5px; min-width: 0; }
+.f label { font-size: 13px; font-weight: 500; color: var(--tx-2); }
+.f input, .f select, .f textarea { width: 100%; min-height: 46px; padding: 10px 12px; background: var(--bg); border: 1px solid var(--line-2); border-radius: 0; color: var(--tx); font-size: 16px; }
+.f textarea { min-height: 96px; resize: vertical; }
+.f select { appearance: none; background-image: linear-gradient(45deg, transparent 50%, var(--tx-2) 50%), linear-gradient(135deg, var(--tx-2) 50%, transparent 50%); background-position: calc(100% - 18px) 50%, calc(100% - 13px) 50%; background-size: 5px 5px; background-repeat: no-repeat; padding-right: 36px; }
+.f input:focus, .f select:focus, .f textarea:focus { outline: 2px solid var(--lime); outline-offset: 0; border-color: var(--lime); }
+.f input[aria-invalid="true"] { border-color: var(--pink); }
+.f__err { font-size: 13px; color: var(--pink-2); min-height: 0; }
+.f__err:empty { display: none; }
+.radios { display: grid; gap: 8px; }
+.radio { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid var(--line-2); background: var(--bg); cursor: pointer; }
+.radio:has(input:checked) { border-color: var(--lime); background: rgba(198,255,61,.05); }
+.radio input { accent-color: var(--lime); width: 18px; height: 18px; margin: 0; }
+.radio__main { display: grid; }
+.radio__main b { font-weight: 500; font-size: 15px; }
+.radio__main small { font-size: 12px; color: var(--mut); }
+.radio__price { font-family: var(--disp); font-weight: 900; font-size: 18px; }
+.soon { font-family: var(--disp); font-weight: 800; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--yel); border: 1px solid rgba(255,210,63,.45); padding: 3px 7px 2px; }
+.paygroup { display: grid; gap: 8px; }
+.paygroup h4 { font-size: 13px; color: var(--mut); font-weight: 500; }
+.co__side { background: var(--bg); border: 1px solid var(--line); padding: 16px; display: grid; gap: 12px; }
+.co__side h3 { font-family: var(--disp); font-weight: 800; font-size: 20px; text-transform: uppercase; letter-spacing: .06em; }
+.co__item { display: flex; justify-content: space-between; gap: 10px; font-size: 14px; padding: 4px 0; }
+.preview-pill { display: inline-flex; align-self: start; justify-self: start; align-items: center; gap: 8px; padding: 5px 10px 4px; background: var(--yel); color: var(--bg); font-family: var(--disp); font-weight: 900; font-size: 15px; letter-spacing: .08em; text-transform: uppercase; clip-path: var(--slant); padding-left: 14px; padding-right: 14px; }
+.parent { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border: 1px dashed var(--line-2); font-size: 14px; color: var(--tx-2); }
+.parent .ico { color: var(--sky); margin-top: 2px; }
+
+/* confirmation */
+.conf { padding: 4px 18px 22px; display: grid; gap: 14px; justify-items: start; }
+.conf h2 { font-size: clamp(40px, 9vw, 56px); }
+.code { font-family: var(--disp); font-weight: 900; font-size: 30px; letter-spacing: .08em; color: var(--lime); }
+.track { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; width: 100%; }
+.track li { display: grid; gap: 6px; font-size: 12px; color: var(--mut); }
+.track li::before { content: ""; height: 6px; background: var(--line); }
+.track li.is-on { color: var(--lime); font-weight: 700; }
+.track li.is-on::before { background: var(--lime); }
+
+.toasts { position: fixed; left: 50%; top: 14px; transform: translateX(-50%); z-index: 80; display: grid; gap: 8px; width: max-content; max-width: calc(100% - 24px); pointer-events: none; }
+.toast { display: flex; align-items: center; gap: 10px; background: var(--panel-2); color: var(--tx); border: 1px solid var(--line-2); border-left: 4px solid var(--lime); padding: 11px 16px; font-weight: 700; font-size: 14px; box-shadow: 0 12px 30px rgba(0,0,0,.55); animation: toast 2.6s ease forwards; }
+.toast::before { content: ""; width: 8px; height: 8px; background: var(--lime); transform: rotate(45deg); flex: none; }
+@keyframes toast { 0% { opacity: 0; transform: translateY(-10px); } 10%, 85% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <!-- UI icons: 2px square-cap strokes on a 24px grid -->
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20 4.2 12.3A4.6 4.6 0 0 1 12 6.6a4.6 4.6 0 0 1 7.8 5.7Z"/></symbol>
+  <symbol id="i-pack" viewBox="0 0 24 24"><path d="M4 8h16v12H4zM8 8V5h8v3M4 13h16M11 13v3h2v-3"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 12 12"><path d="M3 1.5 8 6l-5 4.5"/></symbol>
+  <symbol id="i-swap" viewBox="0 0 24 24"><path d="M4 8h15l-4-4M20 16H5l4 4"/></symbol>
+  <symbol id="i-plane" viewBox="0 0 24 24"><path d="M3 13.5 21 7l-3 11-5.5-3.5L9 18v-5l9-6"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 5 6v6c0 4 3 7 7 9 4-2 7-5 7-9V6Z M9 12l2 2 4-4"/></symbol>
+</svg>
+
+<!-- =====================================================================
+     VBROS DATA — pasted verbatim from content/data.js.
+     Bros: THIS is the block to edit (products, drops, polls, texts).
+     ===================================================================== -->
+<script id="vbro-data">
+/*@@DATA@@*/
+</script>
+<!-- ===================== end of VBROS DATA ===================== -->
+
+<script id="vbro-site-text">
+/* Extra website texts that are not in data.js (HUD labels, countdowns,
+   form messages). Same idea: { en, nl, vi }. Safe to edit. */
+window.VBRO_SITE_TEXT = {
+  skip:         { en: "Skip to the loot", nl: "Ga naar de loot", vi: "Đến kho đồ" },
+  menu:         { en: "Main menu", nl: "Hoofdmenu", vi: "Menu chính" },
+  langLabel:    { en: "Language", nl: "Taal", vi: "Ngôn ngữ" },
+  howShort:     { en: "How it works", nl: "Zo werkt het", vi: "Cách đặt" },
+  hudTitle:     { en: "Next pre-order closes in", nl: "Volgende pre-order sluit over", vi: "Đợt đặt trước kế tiếp chốt sau" },
+  hudUnits:     { en: ["days", "hrs", "min", "sec"], nl: ["dagen", "uur", "min", "sec"], vi: ["ngày", "giờ", "phút", "giây"] },
+  hudFor:       { en: "Closes {date}:", nl: "Sluit {date}:", vi: "Chốt {date}:" },
+  hudNone:      { en: "No pre-order open right now. Check the Drops for the next one.", nl: "Er staat nu geen pre-order open. Check de Drops voor de volgende.", vi: "Hiện chưa mở đợt đặt trước nào. Xem mục Drops để biết đợt tới nha." },
+  routeNote:    { en: "≈ 9,800 km, one suitcase at a time", nl: "≈ 9.800 km, koffer voor koffer", vi: "≈ 9.800 km, từng chiếc vali một" },
+  timeDiff:     { en: "Sài Gòn is {h} h ahead", nl: "Sài Gòn loopt {h} uur voor", vi: "Sài Gòn nhanh hơn {h} tiếng" },
+  shopIntro:    { en: "Every batch has a fixed number of spots. When the pre-order closes, we buy, pack and ship.", nl: "Elke batch heeft een vast aantal plekken. Sluit de pre-order, dan kopen, pakken en versturen we.", vi: "Mỗi đợt có số suất cố định. Chốt đơn xong là tụi mình mua, gói và gửi." },
+  whereFrom:    { en: "From", nl: "Uit", vi: "Từ" },
+  category:     { en: "Type", nl: "Soort", vi: "Loại" },
+  allCats:      { en: "Everything", nl: "Alle soorten", vi: "Mọi loại" },
+  allRarities:  { en: "Any rarity", nl: "Elke rarity", vi: "Mọi độ hiếm" },
+  showing:      { en: "{n} items", nl: "{n} items", vi: "{n} món" },
+  noResults:    { en: "Nothing in this combo right now. Try another filter, or tell us what you want in the squad vote.", nl: "Niks in deze combi op dit moment. Probeer een ander filter, of zeg wat je wil in de squad vote.", vi: "Hiện chưa có món nào ở mục này. Thử bộ lọc khác hoặc vào phần vote nói tụi mình biết nha." },
+  resetFilters: { en: "Show all loot", nl: "Toon alle loot", vi: "Xem tất cả" },
+  closesAt:     { en: "{date}, 23:59 AMS", nl: "{date}, 23:59 AMS", vi: "{date}, 23:59 AMS" },
+  daysLeft:     { en: "{n} days left", nl: "nog {n} dagen", vi: "còn {n} ngày" },
+  hoursLeft:    { en: "{n} h left", nl: "nog {n} uur", vi: "còn {n} giờ" },
+  minsLeft:     { en: "{n} min left", nl: "nog {n} min", vi: "còn {n} phút" },
+  closed:       { en: "Pre-order closed", nl: "Pre-order gesloten", vi: "Đã chốt đơn" },
+  batchFull:    { en: "Batch full", nl: "Batch vol", vi: "Đợt này đủ suất" },
+  shippingNote: { en: "This batch is full and on its way. We'll post in the Drops when it's on the plane.", nl: "Deze batch is vol en onderweg. We posten in de Drops zodra het in het vliegtuig zit.", vi: "Đợt này đủ suất và đang trên đường. Hàng lên máy bay là tụi mình báo ở mục Drops." },
+  soldoutNote:  { en: "Sold out. Vote in the squad vote if we should bring it again.", nl: "Uitverkocht. Stem in de squad vote als we 'm nog een keer moeten halen.", vi: "Hết suất rồi. Vào phần vote nếu muốn tụi mình nhập lại." },
+  toPolls:      { en: "Go to the squad vote", nl: "Naar de squad vote", vi: "Đi tới phần vote" },
+  spotsLeft:    { en: "{n} left", nl: "nog {n}", vi: "còn {n}" },
+  addedToCart:  { en: "Locked in: {name}", nl: "Gelockt: {name}", vi: "Đã chốt: {name}" },
+  wishAdded:    { en: "Saved to your wishlist", nl: "Op je wishlist gezet", vi: "Đã lưu vào yêu thích" },
+  wishRemoved:  { en: "Removed from your wishlist", nl: "Van je wishlist gehaald", vi: "Đã bỏ khỏi yêu thích" },
+  maxSpots:     { en: "That's all the spots left in this batch", nl: "Meer plekken zijn er niet in deze batch", vi: "Đợt này chỉ còn chừng đó suất thôi" },
+  cartCount:    { en: "Loadout, {n} items", nl: "Loadout, {n} items", vi: "Túi đồ, {n} món" },
+  wishCount:    { en: "Wishlist, {n} items", nl: "Wishlist, {n} items", vi: "Yêu thích, {n} món" },
+  less:         { en: "One less", nl: "Eentje minder", vi: "Bớt một" },
+  more:         { en: "One more", nl: "Eentje erbij", vi: "Thêm một" },
+  each:         { en: "{price} each", nl: "{price} per stuk", vi: "{price} mỗi món" },
+  chatTitle:    { en: "Squad chat", nl: "Squad chat", vi: "Nhóm chat" },
+  chatMembers:  { en: "Duy, Dan, Tung and you", nl: "Duy, Dan, Tung en jij", vi: "Duy, Dan, Tung và bạn" },
+  dropsIntro:   { en: "What the squad spotted, restocked and shipped. Newest at the bottom.", nl: "Wat de squad spotte, weer binnen kreeg en verstuurde. Nieuwste onderaan.", vi: "Đội vừa săn gì, có hàng lại gì, gửi gì. Tin mới nhất ở dưới cùng." },
+  pollIntro:    { en: "One vote per poll. Most votes = what we look for first.", nl: "Eén stem per poll. Meeste stemmen = waar we eerst naar zoeken.", vi: "Mỗi poll một phiếu. Nhiều phiếu nhất = tụi mình săn trước." },
+  yourPick:     { en: "your pick", nl: "jouw keuze", vi: "bạn chọn" },
+  howNote:      { en: "Usually 2–3 weeks from closing day to your door.", nl: "Meestal 2 à 3 weken van sluitdatum tot je deur.", vi: "Thường 2–3 tuần từ ngày chốt đơn tới tay bạn." },
+  step:         { en: "Step {n}", nl: "Stap {n}", vi: "Bước {n}" },
+  earlier:      { en: "Show {n} earlier drops", nl: "Toon {n} eerdere drops", vi: "Xem {n} tin cũ hơn" },
+  localTime:    { en: "Local time", nl: "Lokale tijd", vi: "Giờ ở đó" },
+  hello:        { en: "Say hi", nl: "Zeg hoi", vi: "Chào tụi mình" },
+  emailUs:      { en: "Email us at", nl: "Mail ons op", vi: "Email cho tụi mình" },
+  bothClocks:   { en: "Both clocks", nl: "Allebei de klokken", vi: "Hai múi giờ" },
+  /* checkout */
+  summary:      { en: "Your pre-order", nl: "Je pre-order", vi: "Đơn đặt trước của bạn" },
+  countries:    { en: { NL: "Netherlands", EU: "Other EU country", VN: "Vietnam" }, nl: { NL: "Nederland", EU: "Ander EU-land", VN: "Vietnam" }, vi: { NL: "Hà Lan", EU: "Nước EU khác", VN: "Việt Nam" } },
+  directFromSgn:{ en: "Straight from Sài Gòn to your door", nl: "Rechtstreeks van Sài Gòn naar je deur", vi: "Gửi thẳng từ Sài Gòn tới nhà bạn" },
+  shipHint:     { en: "Options depend on the country you ship to.", nl: "De opties hangen af van het land waar het heen gaat.", vi: "Lựa chọn tùy theo quốc gia nhận hàng." },
+  regionNLEU:   { en: "For Netherlands / EU", nl: "Voor Nederland / EU", vi: "Cho Hà Lan / EU" },
+  regionVN:     { en: "For Vietnam", nl: "Voor Vietnam", vi: "Cho Việt Nam" },
+  comingSoon:   { en: "Coming soon", nl: "Komt eraan", vi: "Sắp có" },
+  required:     { en: "Fill this in so we know where it goes", nl: "Vul dit even in, dan weten we waar het heen moet", vi: "Điền giúp ô này để tụi mình biết gửi đi đâu" },
+  badEmail:     { en: "That email looks off. Check for a typo?", nl: "Dat e-mailadres klopt niet helemaal. Typfoutje?", vi: "Email này có vẻ chưa đúng. Kiểm tra lại nha?" },
+  fixErrors:    { en: "A few fields need a look.", nl: "Een paar velden kloppen nog niet.", vi: "Có vài ô cần xem lại." },
+  orderCode:    { en: "Order code (preview)", nl: "Bestelcode (preview)", vi: "Mã đơn (xem thử)" },
+  trackSteps:   { en: ["Ordered", "Bought", "On the plane", "Landed"], nl: ["Besteld", "Gekocht", "In het vliegtuig", "Geland"], vi: ["Đã đặt", "Đã mua", "Đang bay", "Đã về"] },
+  /* contact */
+  cartOption:   { en: "Everything in my loadout ({n})", nl: "Alles in mijn loadout ({n})", vi: "Tất cả trong túi đồ ({n})" },
+  otherItem:    { en: "Something else / a question", nl: "Iets anders / een vraag", vi: "Món khác / hỏi thêm" },
+  contactPreviewTitle: { en: "Preview — nothing was sent", nl: "Preview — er is niks verstuurd", vi: "Bản xem thử — chưa gửi gì cả" },
+  contactPreviewPill: { en: "Preview — messages aren't sent yet", nl: "Preview — berichten worden nog niet verstuurd", vi: "Bản xem thử — tin nhắn chưa được gửi đi" },
+  contactPlaceholder: { en: "you@mail.com / @handle", nl: "jij@mail.nl / @naam", vi: "ban@mail.com / @insta" },
+  trackTitle:   { en: "What happens after a real order", nl: "Wat er gebeurt na een echte bestelling", vi: "Khi đặt thật thì sẽ như này" },
+  /* screen-reader labels */
+  logoLabel:    { en: "VBros, Season 01", nl: "VBros, Season 01", vi: "VBros, Season 01" },
+  sectionsNav:  { en: "Sections", nl: "Onderdelen", vi: "Các mục" },
+  dropsAndVote: { en: "Drops and squad vote", nl: "Drops en squad vote", vi: "Drops và cả hội vote" }
+};
+</script>
+
+<a class="skip" href="#shop" data-t="site.skip">Skip to the loot</a>
+
+<!-- ============================ HEADER ============================ -->
+<header class="hdr">
+  <div class="wrap hdr__row">
+    <a class="logo" href="#top" data-t-aria="site.logoLabel" aria-label="VBros, Season 01"><span class="logo__mark" aria-hidden="true">VBROS</span><span class="logo__s" aria-hidden="true">S01</span></a>
+    <nav class="nav" data-t-aria="site.menu" aria-label="Main menu">
+      <a href="#shop" data-t="ui.nav.shop">Loot</a>
+      <a href="#drops" data-t="ui.nav.drops">Drops</a>
+      <a href="#polls" data-t="ui.nav.polls">Squad vote</a>
+      <a href="#how" data-t="site.howShort">How it works</a>
+      <a href="#squad" data-t="ui.nav.founders">The squad</a>
+    </nav>
+    <div class="tools">
+      <div class="lang" role="group" data-t-aria="site.langLabel" aria-label="Language" id="lang"></div>
+      <button class="iconbtn" type="button" data-action="open-wish" id="wishBtn" aria-label="Wishlist"><svg class="ico" aria-hidden="true"><use href="#i-heart"/></svg><span class="badge" id="wishBadge" data-n="0" aria-hidden="true">0</span></button>
+      <button class="loadout" type="button" data-action="open-cart" id="cartBtn" aria-label="Loadout"><svg class="ico" aria-hidden="true"><use href="#i-pack"/></svg><span class="loadout__lbl" data-t="ui.nav.cart">Loadout</span><span class="loadout__n" id="cartBadge" data-n="0" aria-hidden="true">0</span></button>
+    </div>
+  </div>
+  <nav class="subnav" data-t-aria="site.sectionsNav" aria-label="Sections">
+    <a href="#shop" data-t="ui.nav.shop">Loot</a>
+    <a href="#drops" data-t="ui.nav.drops">Drops</a>
+    <a href="#polls" data-t="ui.nav.polls">Squad vote</a>
+    <a href="#how" data-t="site.howShort">How it works</a>
+    <a href="#squad" data-t="ui.nav.founders">The squad</a>
+  </nav>
+</header>
+
+<main id="top">
+<!-- ============================= HERO ============================= -->
+<section class="hero" aria-labelledby="heroTitle">
+  <div class="wrap hero__grid">
+    <div class="hero__main">
+      <p class="season lbl"><span class="season__dot" aria-hidden="true"></span><span data-t="ui.season"></span></p>
+      <p class="hero__mark" aria-hidden="true">VBROS</p>
+      <h1 class="disp" id="heroTitle"><span class="l1" id="tag1"></span><span class="l2" id="tag2"></span></h1>
+      <p class="hero__sub" data-t="ui.hero.subline"></p>
+      <div class="hero__cta">
+        <a class="btn" href="#shop" data-t="ui.hero.ctaPrimary"></a>
+        <a class="btn btn--ghost" href="#how" data-t="ui.hero.ctaSecondary"></a>
+      </div>
+    </div>
+
+    <div class="hud" role="group" aria-labelledby="hudLbl">
+      <div class="hud__box">
+        <span class="lbl hud__lbl" id="hudLbl" data-t="site.hudTitle"></span>
+        <div class="cd" id="cd" role="timer" aria-live="off"></div>
+        <p class="hud__for" id="hudFor"></p>
+      </div>
+      <div class="clocks" role="group" aria-labelledby="clockLbl">
+        <span class="sr-only" id="clockLbl" data-t="site.bothClocks"></span>
+        <div class="clock clock--sgn"><span class="lbl clock__code">SGN</span><time class="clock__t" id="clkSgn">--:--</time><span class="clock__city"><span data-t="ui.hero.clockLabel"></span> Sài Gòn</span></div>
+        <div class="clock clock--ams"><span class="lbl clock__code">AMS</span><time class="clock__t" id="clkAms">--:--</time><span class="clock__city"><span data-t="ui.hero.clockLabel"></span> Amsterdam</span></div>
+      </div>
+      <div class="route" aria-hidden="true">
+        <div class="route__row">
+          <span style="color:var(--sgn)">SGN</span>
+          <svg viewBox="0 0 200 16" preserveAspectRatio="none">
+            <path d="M4 8H196" stroke="#34343C" stroke-width="2" stroke-dasharray="2 6" vector-effect="non-scaling-stroke"/>
+            <path class="route__pkt" d="M4 8H196" stroke="#C6FF3D" stroke-width="3" stroke-dasharray="26 206" vector-effect="non-scaling-stroke"/>
+            <rect x="0" y="4" width="8" height="8" fill="#FF2E88"/><rect x="192" y="4" width="8" height="8" fill="#7FD4FF"/>
+          </svg>
+          <span style="color:var(--ams)">AMS</span>
+        </div>
+        <div class="route__note"><span id="tzDiff"></span><span data-t="site.routeNote"></span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================= LOOT ============================= -->
+<section class="sec" id="shop" aria-labelledby="shopTitle">
+  <div class="wrap">
+    <div class="sec__head">
+      <div><span class="lbl sec__kicker" style="color:var(--yel)" data-t="ui.sections.products"></span><h2 class="disp" id="shopTitle" data-t="ui.sections.loot"></h2></div>
+      <p data-t="site.shopIntro"></p>
+    </div>
+    <div class="filters">
+      <div class="frow" role="group" id="fOrigin" aria-label="From"></div>
+      <div class="frow" role="group" id="fRarity" aria-label="Rarity"></div>
+      <div class="frow" role="group" id="fCat" aria-label="Type"></div>
+    </div>
+    <p class="count" id="count" aria-live="polite"></p>
+    <div class="grid" id="grid"></div>
+  </div>
+</section>
+
+<!-- ======================== DROPS + VOTE ========================= -->
+<section class="sec" data-t-aria="site.dropsAndVote" aria-label="Drops and squad vote">
+  <div class="wrap duo">
+    <div id="drops">
+      <div class="sec__head"><h2 class="disp" id="dropsTitle" data-t="ui.sections.drops"></h2><p data-t="site.dropsIntro"></p></div>
+      <div class="pane" role="group" aria-labelledby="dropsTitle">
+        <div class="pane__hd">
+          <span aria-hidden="true" style="display:flex"><span class="mono m-tung">TG</span><span class="mono m-duy">DY</span><span class="mono m-dan">DN</span></span>
+          <div><p class="pane__title" data-t="site.chatTitle"></p><p class="pane__sub" data-t="site.chatMembers"></p></div>
+        </div>
+        <ol class="feed" id="feed"></ol>
+      </div>
+    </div>
+    <div id="polls">
+      <div class="sec__head" style="margin-bottom:14px"><h2 class="disp" id="pollsTitle" data-t="ui.sections.polls"></h2></div>
+      <p class="poll__intro" data-t="site.pollIntro"></p>
+      <div class="polls" id="pollList"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================= HOW IT WORKS ========================= -->
+<section class="sec" id="how" aria-labelledby="howTitle">
+  <div class="wrap">
+    <div class="sec__head"><h2 class="disp" id="howTitle" data-t="ui.sections.howItWorks"></h2></div>
+    <ol class="steps" id="steps"></ol>
+    <p class="steps-note"><svg class="ico" aria-hidden="true"><use href="#i-plane"/></svg><span data-t="site.howNote"></span></p>
+  </div>
+</section>
+
+<!-- ============================ SQUAD ============================= -->
+<section class="sec" id="squad" aria-labelledby="squadTitle">
+  <div class="wrap squad">
+    <div>
+      <div class="sec__head"><div><span class="lbl sec__kicker" style="color:var(--sky)" data-t="ui.sections.story"></span><h2 class="disp" id="squadTitle" data-t="ui.sections.founders"></h2></div></div>
+      <p class="story__text" data-t="ui.story"></p>
+      <p class="story__sig lbl" data-t="ui.footer.tagline"></p>
+    </div>
+    <ul class="players" id="players"></ul>
+  </div>
+</section>
+</main>
+
+<!-- ============================ FOOTER ============================ -->
+<footer class="ftr">
+  <div class="wrap">
+    <p class="ftr__mark" aria-hidden="true">VBROS</p>
+    <div class="ftr__grid">
+      <div>
+        <p class="ftr__tag" data-t="ui.footer.tagline"></p>
+        <p class="small" style="margin-top:6px" data-t="ui.season"></p>
+      </div>
+      <div>
+        <h3 class="lbl" data-t="site.hello"></h3>
+        <p><span data-t="site.emailUs"></span> <span class="mail" id="ftrEmail"></span></p>
+        <p style="margin-top:14px"><button class="btn btn--sm" type="button" data-action="contact" data-t="ui.buttons.contactToOrder"></button></p>
+      </div>
+      <div>
+        <h3 class="lbl" data-t="site.bothClocks"></h3>
+        <p class="ftr__clock"><span><span class="c-ams">AMS</span> <span id="fClkAms"></span></span><span><span class="c-sgn">SGN</span> <span id="fClkSgn"></span></span></p>
+      </div>
+    </div>
+    <div class="ftr__legal">
+      <strong data-t="ui.footer.runBy"></strong>
+      <span data-t="ui.footer.kvk"></span>
+      <span data-t="ui.footer.address"></span>
+      <span id="ftrEmail2"></span>
+    </div>
+  </div>
+</footer>
+
+<!-- ============================ LAYERS ============================ -->
+<div class="layer" id="L-cart" aria-hidden="true">
+  <div class="layer__scrim" data-action="close"></div>
+  <aside class="drawer" role="dialog" aria-modal="true" aria-labelledby="cartTitle">
+    <div class="panel__head"><h2 class="disp" id="cartTitle" data-t="ui.sections.cart"></h2><button class="iconbtn x" type="button" data-action="close" data-t-aria="ui.buttons.close"><svg class="ico" aria-hidden="true"><use href="#i-x"/></svg></button></div>
+    <div class="panel__body" id="cartBody"></div>
+    <div class="panel__foot" id="cartFoot"></div>
+  </aside>
+</div>
+
+<div class="layer" id="L-wish" aria-hidden="true">
+  <div class="layer__scrim" data-action="close"></div>
+  <aside class="drawer" role="dialog" aria-modal="true" aria-labelledby="wishTitle">
+    <div class="panel__head"><h2 class="disp" id="wishTitle" data-t="ui.sections.wishlist"></h2><button class="iconbtn x" type="button" data-action="close" data-t-aria="ui.buttons.close"><svg class="ico" aria-hidden="true"><use href="#i-x"/></svg></button></div>
+    <div class="panel__body" id="wishBody"></div>
+  </aside>
+</div>
+
+<div class="layer" id="L-product" aria-hidden="true">
+  <div class="layer__scrim" data-action="close"></div>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="pmName">
+    <div style="overflow-y:auto" id="pmBody"></div>
+  </div>
+</div>
+
+<div class="layer" id="L-checkout" aria-hidden="true">
+  <div class="layer__scrim" data-action="close"></div>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="coTitle">
+    <div class="panel__head"><h2 class="disp" id="coTitle" data-t="ui.sections.checkout"></h2><button class="iconbtn x" type="button" data-action="close" data-t-aria="ui.buttons.close"><svg class="ico" aria-hidden="true"><use href="#i-x"/></svg></button></div>
+    <div class="panel__body" id="coBody"></div>
+  </div>
+</div>
+
+<div class="layer" id="L-confirm" aria-hidden="true">
+  <div class="layer__scrim" data-action="close"></div>
+  <div class="modal modal--narrow" role="dialog" aria-modal="true" aria-labelledby="confTitle">
+    <div class="panel__head" style="justify-content:flex-end;border:0;padding-bottom:0"><button class="iconbtn x" type="button" data-action="close" data-t-aria="ui.buttons.close"><svg class="ico" aria-hidden="true"><use href="#i-x"/></svg></button></div>
+    <div style="overflow-y:auto" id="confBody"></div>
+  </div>
+</div>
+
+<div class="layer" id="L-contact" aria-hidden="true">
+  <div class="layer__scrim" data-action="close"></div>
+  <div class="modal modal--narrow" role="dialog" aria-modal="true" aria-labelledby="ctTitle">
+    <div class="panel__head"><h2 class="disp" id="ctTitle" data-t="ui.sections.contact"></h2><button class="iconbtn x" type="button" data-action="close" data-t-aria="ui.buttons.close"><svg class="ico" aria-hidden="true"><use href="#i-x"/></svg></button></div>
+    <div class="panel__body" id="ctBody"></div>
+  </div>
+</div>
+
+<div class="toasts" id="toasts" role="status" aria-live="polite"></div>
+
+<script>
+/* =====================================================================
+   VBROS SITE SCRIPT — vanilla JS, no libraries.
+   Sections: 1 helpers · 2 state & storage · 3 formatting · 4 products
+   (SHOPIFY HOOK) · 5 renderers · 6 layers (modals/drawers) · 7 cart &
+   checkout · 8 contact · 9 events · 10 boot
+   ===================================================================== */
+(function () {
+  "use strict";
+  const D = window.VBRO_DATA;
+  const S = window.VBRO_SITE_TEXT;
+  const UI = D.ui;
+
+  /* ---------- 1. helpers ---------- */
+  const $ = (sel, el = document) => el.querySelector(sel);
+  const $$ = (sel, el = document) => Array.from(el.querySelectorAll(sel));
+  const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const fill = (str, vars) => String(str).replace(/\{(\w+)\}/g, (m, k) => (vars && k in vars ? vars[k] : m));
+  /** translate a {en,nl,vi} object (falls back to English) */
+  const t = (obj, vars) => {
+    if (obj == null) return "";
+    if (typeof obj === "string") return fill(obj, vars);
+    const v = obj[state.lang] != null && obj[state.lang] !== "" ? obj[state.lang] : obj.en;
+    return typeof v === "string" ? fill(v, vars) : v;
+  };
+  /** look up "ui.nav.shop" in data.js or "site.skip" in VBRO_SITE_TEXT */
+  const path = (p) => p.split(".").reduce((o, k) => (o ? o[k] : undefined), p.startsWith("site.") ? { site: S } : D);
+  const founder = (id) => D.founders.find((f) => f.id === id) || { id, name: id, city: "", handle: "", flag: "NL" };
+  const cityCode = (f) => (f.flag === "VN" ? "SGN" : "AMS");
+  const flagEmoji = (c) => (c === "VN" ? "🇻🇳" : "🇳🇱");
+  const RARITIES = ["common", "rare", "epic", "legendary"];
+  const rarityOf = (p) => (RARITIES.includes(p.rarity) ? p.rarity : "common");
+  /** monogram for a founder: first + last letter (Duy → DY, Tung → TG) */
+  const monoTxt = (f) => { const n = String(f.name || "?"); return (n[0] + (n.length > 1 ? n[n.length - 1] : "")).toUpperCase(); };
+  const mono = (f, size = "") => `<span class="mono ${size ? "mono--" + size : ""} m-${esc(f.id)}" aria-hidden="true">${esc(monoTxt(f))}</span>`;
+  /** big outlined code on the loot slot: initials of the English name */
+  const code = (p) => (p.name.en || "").split(/[\s-]+/).filter((w) => /^[A-Za-z]/.test(w)).slice(0, 2).map((w) => w[0]).join("").toUpperCase();
+  const icon = (id, cls = "") => `<svg class="ico ${cls}" aria-hidden="true"><use href="#i-${id}"/></svg>`;
+
+  /* ---------- 2. state & storage (localStorage may throw → in-memory) ---------- */
+  const KEY = "vbro.v1";
+  const store = {
+    ok: true,
+    load() { try { return JSON.parse(window.localStorage.getItem(KEY) || "{}") || {}; } catch (e) { this.ok = false; return {}; } },
+    save(obj) { if (!this.ok) return; try { window.localStorage.setItem(KEY, JSON.stringify(obj)); } catch (e) { this.ok = false; } }
+  };
+  const saved = store.load();
+  const state = {
+    lang: D.meta.languages.includes(saved.lang) ? saved.lang : (D.meta.defaultLang || "en"),
+    cart: saved.cart && typeof saved.cart === "object" ? saved.cart : {},      // { productId: qty }
+    wish: Array.isArray(saved.wish) ? saved.wish : [],                          // [productId]
+    votes: saved.votes && typeof saved.votes === "object" ? saved.votes : {},  // { pollId: optionId }
+    filter: { origin: "all", cat: "all", rarity: "all" }
+  };
+  const persist = () => store.save({ lang: state.lang, cart: state.cart, wish: state.wish, votes: state.votes });
+
+  /* ---------- 3. formatting (locale aware) ---------- */
+  const LOCALE = { en: "en-GB", nl: "nl-NL", vi: "vi-VN" };
+  const loc = () => LOCALE[state.lang] || "en-GB";
+  const TZ = { AMS: "Europe/Amsterdam", SGN: "Asia/Ho_Chi_Minh" };
+  const money = (eur) => new Intl.NumberFormat(loc(), { style: "currency", currency: "EUR", minimumFractionDigits: eur % 1 ? 2 : 0, maximumFractionDigits: 2 }).format(eur);
+  const moneyExact = (eur) => new Intl.NumberFormat(loc(), { style: "currency", currency: "EUR", minimumFractionDigits: 2 }).format(eur);
+  const vnd = (p) => t(UI.product.approxVND, { vnd: new Intl.NumberFormat("vi-VN").format(p.priceVND || Math.round((p.priceEUR * D.meta.eurToVnd) / 5000) * 5000) });
+  const clock = (date, tz) => new Intl.DateTimeFormat(loc(), { hour: "2-digit", minute: "2-digit", hourCycle: "h23", timeZone: TZ[tz] }).format(date);
+  const dayLabel = (date) => new Intl.DateTimeFormat(loc(), { weekday: "short", day: "numeric", month: "short", timeZone: TZ.AMS }).format(date);
+  const fullStamp = (date, tz) => new Intl.DateTimeFormat(loc(), { weekday: "short", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit", hourCycle: "h23", timeZone: TZ[tz] }).format(date);
+  /** minutes offset of a time zone at a given instant */
+  function tzOffset(date, tz) {
+    const p = {};
+    new Intl.DateTimeFormat("en-US", { timeZone: tz, hourCycle: "h23", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", second: "2-digit" })
+      .formatToParts(date).forEach((x) => (p[x.type] = x.value));
+    const asUTC = Date.UTC(+p.year, +p.month - 1, +p.day, +p.hour % 24, +p.minute, +p.second);
+    return Math.round((asUTC - date.getTime()) / 60000);
+  }
+  /** pre-orders close at the END of the given day, Amsterdam time */
+  function closesAt(ymd) {
+    const [y, m, d] = ymd.split("-").map(Number);
+    const guess = Date.UTC(y, m - 1, d, 23, 59, 0);
+    return new Date(guess - tzOffset(new Date(guess), TZ.AMS) * 60000);
+  }
+  function timeLeft(ymd) {
+    const ms = closesAt(ymd).getTime() - Date.now();
+    if (ms <= 0) return { txt: t(S.closed), soon: false, closed: true };
+    const h = ms / 3600000;
+    if (h >= 48) return { txt: t(S.daysLeft, { n: Math.floor(h / 24) }), soon: h < 24 * 4 };
+    if (h >= 1) return { txt: t(S.hoursLeft, { n: Math.floor(h) }), soon: true };
+    return { txt: t(S.minsLeft, { n: Math.max(1, Math.floor(ms / 60000)) }), soon: true };
+  }
+  const rtf = () => new Intl.RelativeTimeFormat(loc(), { numeric: "auto", style: "short" });
+  function relTime(date) {
+    const s = (date.getTime() - Date.now()) / 1000, a = Math.abs(s);
+    if (s > 0 || a >= 86400 * 7) return "";
+    if (a < 60) return rtf().format(0, "second");
+    if (a < 3600) return rtf().format(Math.round(s / 60), "minute");
+    if (a < 86400) return rtf().format(Math.round(s / 3600), "hour");
+    return rtf().format(Math.round(s / 86400), "day");
+  }
+  function dayKey(date) { return new Intl.DateTimeFormat("en-CA", { timeZone: TZ.AMS }).format(date); }
+  function daySeparator(date) {
+    const today = new Date(dayKey(new Date()) + "T12:00:00Z"), that = new Date(dayKey(date) + "T12:00:00Z");
+    const diff = Math.round((that - today) / 86400000);
+    if (diff >= -1) return new Intl.RelativeTimeFormat(loc(), { numeric: "auto" }).format(diff, "day").replace(/^./, (c) => c.toUpperCase());
+    return dayLabel(date);
+  }
+
+  /* =====================================================================
+     4. PRODUCTS — SHOPIFY HOOK
+     ---------------------------------------------------------------------
+     Everything on the page (grid, HUD countdown, modal, cart, wishlist,
+     drops, contact form) reads products ONLY through getProducts() /
+     getProduct(id). To switch to Shopify later:
+       1. Fetch products from the Storefront API (GraphQL `products` query)
+          or the Buy Button SDK, once on boot.
+       2. Map each Shopify product into the same shape as
+          VBRO_DATA.products (id = handle, name {en,nl,vi} from
+          translations or metafields, priceEUR from priceRange, status /
+          spots / preorderCloses / origin / spottedBy / rarity / visual
+          from metafields).
+       3. Put the result in `productSource` below and call renderAll().
+       4. In placeOrder(), replace the preview confirmation with a
+          Storefront `cartCreate` + redirect to `checkoutUrl`.
+     ===================================================================== */
+  let productSource = null; // ← Shopify-mapped array goes here
+  const getProducts = () => productSource || D.products;
+  const getProduct = (id) => getProducts().find((p) => p.id === id);
+  const spotsFree = (p) => Math.max(0, p.spots.total - p.spots.taken);
+  const canBuy = (p) => (p.status === "open" || p.status === "almost") && spotsFree(p) > 0 && !timeLeft(p.preorderCloses).closed;
+
+  /* ---------- 5. renderers ---------- */
+  function renderStatic() {
+    document.documentElement.lang = state.lang;
+    $$("[data-t]").forEach((el) => { const v = path(el.dataset.t); if (v != null) el.textContent = t(v); });
+    $$("[data-t-aria]").forEach((el) => { const v = path(el.dataset.tAria); if (v != null) el.setAttribute("aria-label", t(v)); });
+    const tg = t(UI.hero.headlineLines) || [t(UI.hero.headline), ""];
+    $("#tag1").textContent = tg[0]; $("#tag2").textContent = tg[1] || "";
+    $("#ftrEmail").textContent = UI.footer.email;
+    $("#ftrEmail2").textContent = UI.footer.email;
+    $("#fOrigin").setAttribute("aria-label", t(S.whereFrom));
+    $("#fCat").setAttribute("aria-label", t(S.category));
+    $("#fRarity").setAttribute("aria-label", t(UI.rarityTitle));
+    $("#lang").innerHTML = D.meta.languages.map((l) => `<button type="button" data-action="lang" data-lang="${l}" aria-pressed="${l === state.lang}" lang="${l}">${esc(UI.langNames[l] || l.toUpperCase())}</button>`).join("");
+  }
+
+  const routeTag = (origin) => {
+    const from = origin === "VN" ? "SGN" : "AMS", to = origin === "VN" ? "AMS" : "SGN";
+    return `<span class="route-tag lbl" title="${esc(t(UI.origin[origin]))}"><span class="emoji" aria-hidden="true">${flagEmoji(origin)}</span>${from}${icon("chev")}<span class="sr-only"> → </span>${to}</span>`;
+  };
+  const tier = (p) => `<span class="tier lbl"><span class="tier__gem" aria-hidden="true"></span>${esc(t(UI.rarity[rarityOf(p)]))}</span>`;
+  const statusChip = (p) => `<span class="st st--${esc(p.status)}">${esc(t(UI.status[p.status]))}</span>`;
+  const heartBtn = (p) => {
+    const on = state.wish.includes(p.id);
+    return `<button class="heart" type="button" data-action="wish" data-id="${p.id}" aria-pressed="${on}" aria-label="${esc(t(on ? UI.buttons.wishlistRemove : UI.buttons.wishlistAdd))}: ${esc(t(p.name))}">${icon("heart")}</button>`;
+  };
+  function spotsBar(p) {
+    const pct = Math.min(100, Math.round((p.spots.taken / p.spots.total) * 100));
+    const free = spotsFree(p), lbl = t(UI.product.spotsLeft, { taken: p.spots.taken, total: p.spots.total });
+    return `<div class="spots">
+      <div class="spots__txt"><span>${esc(lbl)}</span>${free > 0 ? `<b>${esc(t(S.spotsLeft, { n: free }))}</b>` : ""}</div>
+      <div class="bar" role="img" aria-label="${esc(lbl)}"><span class="bar__f" style="width:${pct}%"></span></div>
+    </div>`;
+  }
+  function leftTxt(p) {
+    if (p.status === "shipping") return esc(t(S.batchFull));
+    if (p.status === "soldout") return "";
+    const tl = timeLeft(p.preorderCloses);
+    return `<span class="${tl.soon ? "left--soon" : ""}">${esc(tl.txt)}</span>`;
+  }
+  function closesLine(p) {
+    if (p.status === "shipping" || p.status === "soldout") return "";
+    const tl = timeLeft(p.preorderCloses);
+    const date = t(S.closesAt, { date: dayLabel(closesAt(p.preorderCloses)) });
+    return `<p class="closes"><span>${esc(t(UI.product.closes, { date: "\u0001" })).replace("\u0001", `<span style="white-space:nowrap">${esc(date)}</span>`)}</span><span class="${tl.soon ? "left--soon" : ""}">${esc(tl.txt)}</span></p>`;
+  }
+  function visual(p, withSpotter) {
+    const spot = withSpotter ? founder(p.spottedBy) : null;
+    return `<div class="vis"${withSpotter ? ` data-action="open-product" data-id="${p.id}"` : ""}>
+      <span class="vis__code" aria-hidden="true">${esc(code(p))}</span>
+      ${spot ? `<span class="vis__spot">${mono(spot)}<span>${esc(t(UI.product.spottedBy, { name: spot.name }))}</span></span>` : ""}
+      ${heartBtn(p)}
+      <span class="vis__emoji emoji" role="img" aria-label="${esc(t(p.name))}">${p.visual.emoji}</span>
+    </div>`;
+  }
+  function addBtn(p, cls = "") {
+    const ok = canBuy(p);
+    const label = ok ? t(UI.buttons.addToCart) : p.status === "shipping" ? t(S.batchFull) : p.status === "soldout" ? t(UI.status.soldout) : t(S.closed);
+    return `<button class="btn ${cls}" type="button" data-action="add" data-id="${p.id}" ${ok ? "" : "disabled"} aria-label="${esc(label)}: ${esc(t(p.name))}">${esc(label)}</button>`;
+  }
+  function card(p) {
+    return `<article class="card r-${rarityOf(p)} ${canBuy(p) ? "" : "is-out"}">
+      <div class="card__hd">${tier(p)}${routeTag(p.origin)}</div>
+      ${visual(p, true)}
+      <h3 class="card__title"><button type="button" data-action="open-product" data-id="${p.id}">${esc(t(p.name))}</button></h3>
+      <p class="card__hype">${esc(t(p.hype))}</p>
+      <div class="statline">${statusChip(p)}${leftTxt(p)}</div>
+      ${spotsBar(p)}
+      <div class="card__buy">
+        <p class="price"><span class="price__eur">${money(p.priceEUR)}</span>${p.origin === "VN" || state.lang === "vi" ? `<span class="price__vnd">${esc(vnd(p))}</span>` : ""}</p>
+        ${addBtn(p, "btn--sm")}
+      </div>
+    </article>`;
+  }
+  function renderFilters() {
+    const f = state.filter;
+    const origins = [["all", UI.filters.all], ["VN", UI.filters.fromVN], ["NL", UI.filters.fromNL]];
+    $("#fOrigin").innerHTML = `<span class="frow__lbl lbl" aria-hidden="true">${esc(t(S.whereFrom))}</span>` + origins.map(([v, l]) => `<button class="fbtn" type="button" data-action="filter-origin" data-v="${v}" aria-pressed="${f.origin === v}">${v !== "all" ? `<span class="emoji" aria-hidden="true">${flagEmoji(v)}</span>` : ""}${esc(t(l))}</button>`).join("");
+    const usedR = RARITIES.filter((r) => getProducts().some((p) => rarityOf(p) === r)).reverse();
+    $("#fRarity").innerHTML = `<span class="frow__lbl lbl" aria-hidden="true">${esc(t(UI.rarityTitle))}</span>` + [["all", S.allRarities], ...usedR.map((r) => [r, UI.rarity[r]])]
+      .map(([v, l]) => `<button class="fbtn ${v !== "all" ? "r-" + v : ""}" type="button" data-action="filter-rarity" ${v !== "all" ? `data-r="${v}"` : ""} data-v="${v}" aria-pressed="${f.rarity === v}">${v !== "all" ? `<span class="fbtn__gem" aria-hidden="true"></span>` : ""}${esc(t(l))}</button>`).join("");
+    const used = Object.keys(UI.categories).filter((c) => getProducts().some((p) => p.category === c));
+    $("#fCat").innerHTML = `<span class="frow__lbl lbl" aria-hidden="true">${esc(t(S.category))}</span>` + [["all", S.allCats], ...used.map((c) => [c, UI.categories[c]])]
+      .map(([v, l]) => `<button class="fbtn" type="button" data-action="filter-cat" data-v="${v}" aria-pressed="${f.cat === v}">${esc(t(l))}</button>`).join("");
+  }
+  /** the ONE function that renders the loot grid */
+  function renderShop() {
+    renderFilters();
+    const f = state.filter;
+    const list = getProducts().filter((p) => (f.origin === "all" || p.origin === f.origin) && (f.cat === "all" || p.category === f.cat) && (f.rarity === "all" || rarityOf(p) === f.rarity));
+    // buyable first, then shipping, then sold out; within group by closing date
+    const rank = (p) => (canBuy(p) ? 0 : p.status === "shipping" ? 1 : 2);
+    list.sort((a, b) => rank(a) - rank(b) || a.preorderCloses.localeCompare(b.preorderCloses));
+    $("#grid").innerHTML = list.length ? list.map(card).join("") : `<div class="empty-grid"><p>${esc(t(S.noResults))}</p><p style="margin-top:12px"><button class="btn btn--sm btn--ghost" type="button" data-action="reset-filters">${esc(t(S.resetFilters))}</button></p></div>`;
+    $("#count").textContent = t(S.showing, { n: list.length });
+  }
+
+  function miniProduct(p) {
+    return `<button class="mini r-${rarityOf(p)}" type="button" data-action="open-product" data-id="${p.id}">
+      <span class="mini__vis emoji" aria-hidden="true">${p.visual.emoji}</span>
+      <span class="mini__txt"><span class="mini__name">${esc(t(p.name))}</span><span class="mini__go">${esc(t(UI.rarity[rarityOf(p)]))} · ${esc(t(UI.product.viewProduct))}</span></span>
+      <span class="mini__price">${money(p.priceEUR)}</span></button>`;
+  }
+  function renderDrops() {
+    const all = D.drops.slice().sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp)); // chat order: newest at the bottom
+    const hidden = state.allDrops ? 0 : Math.max(0, all.length - 5);
+    const drops = all.slice(hidden);
+    let lastDay = "", html = hidden ? `<li class="feed__more"><button class="btn btn--sm btn--ghost" type="button" data-action="more-drops">${esc(t(S.earlier, { n: hidden }))}</button></li>` : "";
+    drops.forEach((d) => {
+      const date = new Date(d.timestamp), f = founder(d.author), cc = d.flag === "VN" ? "SGN" : "AMS";
+      const k = dayKey(date);
+      if (k !== lastDay) { html += `<li class="daysep">${esc(daySeparator(date))}</li>`; lastDay = k; }
+      const p = d.productId ? getProduct(d.productId) : null;
+      html += `<li class="msg msg--${cc.toLowerCase()}">
+        ${mono(f, "md")}
+        <article class="msg__body">
+          <div class="msg__meta"><span class="msg__who">${esc(f.name)}</span><span class="tagchip tag--${esc(d.tag)}">${esc(t(UI.dropTags[d.tag]))}</span></div>
+          <p class="msg__text">${esc(t(d.text))}</p>
+          ${p ? miniProduct(p) : ""}
+          <p class="msg__when"><time datetime="${esc(d.timestamp)}" title="${esc(fullStamp(date, cc))} ${cc}"><b>${clock(date, cc)} ${cc}</b></time><span>${esc(d.city)}</span><span>${esc(relTime(date))}</span></p>
+        </article></li>`;
+    });
+    $("#feed").innerHTML = html;
+  }
+
+  function renderPolls(animateId) {
+    $("#pollList").innerHTML = D.polls.map((poll) => {
+      const mine = state.votes[poll.id];
+      const voted = !!mine || !poll.active;
+      const total = poll.options.reduce((s, o) => s + o.votes + (mine === o.id ? 1 : 0), 0);
+      const dir = (poll.direction || "").startsWith("VN") ? "VN" : "NL";
+      const opts = poll.options.map((o) => {
+        const n = o.votes + (mine === o.id ? 1 : 0), pct = total ? Math.round((n / total) * 100) : 0;
+        return `<button class="opt ${mine === o.id ? "is-mine" : ""}" type="button" data-action="vote" data-poll="${poll.id}" data-opt="${o.id}" ${voted ? `aria-disabled="true"` : ""} aria-label="${esc(t(o.label))}${voted ? `, ${pct}%` : ""}${mine === o.id ? `, ${esc(t(S.yourPick))}` : ""}">
+          <span class="opt__bar" data-w="${voted ? pct : 0}"></span><span class="opt__emoji emoji" aria-hidden="true">${o.emoji}</span><span class="opt__label">${esc(t(o.label))}${mine === o.id ? ` <span class="opt__mine">(${esc(t(S.yourPick))})</span>` : ""}</span><span class="opt__pct" aria-hidden="true">${pct}%</span></button>`;
+      }).join("");
+      return `<article class="pane poll ${voted ? "is-voted" : ""}" data-poll="${poll.id}" data-dir="${dir}">
+        <div>${routeTag(dir)}</div>
+        <h3 class="poll__q">${esc(t(poll.question))}</h3>
+        <div class="poll__opts" role="group" aria-label="${esc(t(poll.question))}">${opts}</div>
+        <p class="poll__foot"><span>${esc(t(UI.pollTexts.totalVotes, { count: total }))}</span><span class="poll__thanks" aria-live="polite">${mine ? esc(t(UI.pollTexts.thanks)) : !poll.active ? esc(t(UI.pollTexts.closed)) : ""}</span></p>
+      </article>`;
+    }).join("");
+    $$("#pollList .poll").forEach((el) => {
+      const bars = $$(".opt__bar", el);
+      const set = () => bars.forEach((b) => (b.style.width = b.dataset.w + "%"));
+      if (el.dataset.poll === animateId) requestAnimationFrame(() => requestAnimationFrame(set));
+      else { bars.forEach((b) => (b.style.transition = "none")); set(); }
+    });
+  }
+
+  function renderSteps() {
+    const n = UI.howItWorks.length;
+    $("#steps").innerHTML = UI.howItWorks.map((s, i) => `<li class="step">
+      <div class="step__top"><span class="step__n" aria-hidden="true">${String(i + 1).padStart(2, "0")}</span><span class="step__emoji emoji" aria-hidden="true">${s.emoji}</span></div>
+      <span class="sr-only">${esc(t(S.step, { n: i + 1 }))}</span><h3>${esc(t(s.title))}</h3><p>${esc(t(s.text))}</p>
+      <div class="bar" aria-hidden="true"><span class="bar__f" style="width:${Math.round(((i + 1) / n) * 100)}%"></span></div></li>`).join("");
+  }
+  function renderPlayers() {
+    $("#players").innerHTML = D.founders.map((f) => {
+      const cc = cityCode(f);
+      return `<li class="player m-${esc(f.id)}">
+        <div class="player__hd">${mono(f, "lg")}<span class="player__city"><b><span class="emoji" aria-hidden="true">${flagEmoji(f.flag)}</span> ${cc}</b><span>${esc(f.city)}</span></span></div>
+        <h3 class="player__name">${esc(f.name)}<span class="player__role lbl">${esc(t(f.squadRole))}</span></h3>
+        <p class="player__handle">${esc(f.handle)}</p>
+        <p class="player__bio">${esc(t(f.role))}</p>
+        <p class="player__time"><span>${esc(t(S.localTime))}</span><b data-clock="${cc}">--:--</b></p>
+      </li>`;
+    }).join("");
+  }
+
+  /* clocks: both cities */
+  function tickClocks() {
+    const now = new Date();
+    const a = clock(now, "AMS"), s = clock(now, "SGN");
+    $("#clkAms").textContent = a; $("#clkSgn").textContent = s;
+    $("#fClkAms").textContent = a; $("#fClkSgn").textContent = s;
+    $$("[data-clock]").forEach((el) => (el.textContent = el.dataset.clock === "SGN" ? s : a));
+    $("#clkAms").setAttribute("datetime", now.toISOString()); $("#clkSgn").setAttribute("datetime", now.toISOString());
+    const diff = (tzOffset(now, TZ.SGN) - tzOffset(now, TZ.AMS)) / 60;
+    $("#tzDiff").textContent = t(S.timeDiff, { h: diff });
+  }
+
+  /* HUD countdown → nearest open pre-order (closes 23:59 Amsterdam) */
+  let hudTarget = null;
+  function nextClosing() {
+    const now = Date.now();
+    return getProducts().filter(canBuy).map((p) => ({ p, at: closesAt(p.preorderCloses) }))
+      .filter((x) => x.at.getTime() > now).sort((a, b) => a.at - b.at)[0] || null;
+  }
+  function renderHud() {
+    hudTarget = nextClosing();
+    const u = t(S.hudUnits);
+    if (!hudTarget) {
+      $("#cd").innerHTML = "";
+      $("#hudFor").textContent = t(S.hudNone);
+      return;
+    }
+    $("#cd").innerHTML = [0, 1, 2, 3].map((i) => `${i ? `<span class="cd__sep" aria-hidden="true">:</span>` : ""}<span class="cd__seg"><span class="cd__n" data-i="${i}">00</span><span class="cd__u">${esc(u[i])}</span></span>`).join("");
+    const p = hudTarget.p;
+    $("#hudFor").innerHTML = `<span>${esc(t(S.hudFor, { date: dayLabel(hudTarget.at) }))}</span><button type="button" data-action="open-product" data-id="${p.id}">${esc(t(p.name))}</button>`;
+    tickHud();
+  }
+  function tickHud() {
+    if (!hudTarget) return;
+    let ms = hudTarget.at.getTime() - Date.now();
+    if (ms <= 0) { renderHud(); renderShop(); return; }
+    const s = Math.floor(ms / 1000);
+    const parts = [Math.floor(s / 86400), Math.floor((s % 86400) / 3600), Math.floor((s % 3600) / 60), s % 60];
+    const ns = $$("#cd .cd__n");
+    parts.forEach((v, i) => { if (ns[i]) ns[i].textContent = String(v).padStart(2, "0"); });
+    const u = t(S.hudUnits);
+    $("#cd").setAttribute("aria-label", parts.map((v, i) => `${v} ${u[i]}`).join(", "));
+  }
+
+  /* ---------- 6. layers: modals & drawers ---------- */
+  const stack = [];
+  const FOCUSABLE = 'a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])';
+  function openLayer(id, opener) {
+    const el = document.getElementById("L-" + id);
+    if (!el || stack.some((s) => s.el === el)) return;
+    stack.push({ el, opener: opener || document.activeElement });
+    el.classList.add("is-open"); el.setAttribute("aria-hidden", "false");
+    document.documentElement.style.overflow = "hidden";
+    $$("main, header, footer").forEach((x) => x.setAttribute("inert", ""));
+    setTimeout(() => { const f = $(".panel__body " + FOCUSABLE, el) || $(FOCUSABLE, el); f && f.focus({ preventScroll: true }); }, 30);
+  }
+  function closeTop(restore = true) {
+    const top = stack.pop();
+    if (!top) return;
+    top.el.classList.remove("is-open"); top.el.setAttribute("aria-hidden", "true");
+    if (!stack.length) {
+      document.documentElement.style.overflow = "";
+      $$("main, header, footer").forEach((x) => x.removeAttribute("inert"));
+      if (/^#(cart|wishlist)$/.test(location.hash)) { try { history.replaceState(null, "", location.pathname + location.search); } catch (e) { /* sandboxed */ } }
+    }
+    if (restore && top.opener && document.contains(top.opener)) top.opener.focus({ preventScroll: true });
+    return top.opener;
+  }
+  function closeAll() { let o; while (stack.length) o = closeTop(false); return o; }
+  document.addEventListener("keydown", (e) => {
+    if (!stack.length) return;
+    if (e.key === "Escape") { e.preventDefault(); closeTop(); return; }
+    if (e.key === "Tab") { // focus trap
+      const el = stack[stack.length - 1].el;
+      const f = $$(FOCUSABLE, el).filter((x) => x.offsetParent !== null);
+      if (!f.length) return;
+      const first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+      else if (!el.contains(document.activeElement)) { e.preventDefault(); first.focus(); }
+    }
+  });
+
+  function toast(msg) {
+    const el = document.createElement("div");
+    el.className = "toast"; el.textContent = msg;
+    const box = $("#toasts"); box.appendChild(el);
+    while (box.children.length > 1) box.firstChild.remove();
+    setTimeout(() => el.remove(), 2600);
+  }
+  const slap = (el) => { if (!el) return; el.classList.remove("slap"); void el.offsetWidth; el.classList.add("slap"); };
+
+  /* product modal */
+  function renderProductModal(id) {
+    const p = getProduct(id); if (!p) return;
+    const f = founder(p.spottedBy);
+    let note = "";
+    if (p.status === "shipping") note = `<p class="note note--sky">${esc(t(S.shippingNote))}</p>`;
+    if (p.status === "soldout") note = `<p class="note note--yel">${esc(t(S.soldoutNote))} <button class="linkbtn" type="button" data-action="goto-polls">${esc(t(S.toPolls))}</button></p>`;
+    $("#pmBody").innerHTML = `<div class="pm r-${rarityOf(p)}" data-id="${p.id}">
+      ${visual(p, false)}
+      <div class="pm__info">
+        <div class="pm__top">${tier(p)}<button class="iconbtn x" type="button" data-action="close" aria-label="${esc(t(UI.buttons.close))}">${icon("x")}</button></div>
+        <h2 class="disp pm__name" id="pmName">${esc(t(p.name))}</h2>
+        <p class="pm__hype">${esc(t(p.hype))}</p>
+        <p class="pm__desc">${esc(t(p.description))}</p>
+        <div class="statline">${statusChip(p)}${routeTag(p.origin)}</div>
+        ${spotsBar(p)}
+        ${closesLine(p)}
+        ${note}
+        <div class="pm__row"><p class="price"><span class="price__eur" style="font-size:40px">${money(p.priceEUR)}</span><span class="price__vnd">${esc(vnd(p))}</span></p></div>
+        <div class="pm__actions">${addBtn(p)}<button class="btn btn--ghost" type="button" data-action="contact" data-id="${p.id}">${esc(t(UI.buttons.contactToOrder))}</button></div>
+        <div class="pm__spotted">${mono(f, "md")}<div><p style="font-weight:700">${esc(t(UI.product.spottedBy, { name: f.name }))} <span class="muted" style="font-weight:400">· ${esc(t(f.squadRole))}</span></p><p class="small">${esc(f.handle)}, ${esc(f.city)}</p></div></div>
+      </div></div>`;
+  }
+  function openProduct(id, opener) {
+    if (stack.length && stack[stack.length - 1].el.id === "L-product") { renderProductModal(id); return; }
+    closeAll(); renderProductModal(id); openLayer("product", opener);
+  }
+
+  /* ---------- 7. cart & wishlist ---------- */
+  const cartLines = () => Object.entries(state.cart).map(([id, qty]) => ({ p: getProduct(id), qty: Math.floor(Number(qty)) || 0 })).filter((l) => l.p && l.qty > 0);
+  const cartCount = () => cartLines().reduce((s, l) => s + l.qty, 0);
+  const subtotal = () => cartLines().reduce((s, l) => s + l.qty * l.p.priceEUR, 0);
+  /* drop anything that can't be bought any more / respect the spot caps (e.g. after reload) */
+  function sanitizeCart() {
+    Object.keys(state.cart).forEach((id) => {
+      const p = getProduct(id), q = Math.floor(Number(state.cart[id])) || 0;
+      if (!p || !canBuy(p) || q <= 0) delete state.cart[id];
+      else state.cart[id] = Math.min(q, spotsFree(p));
+    });
+    state.wish = state.wish.filter((id) => getProduct(id));
+  }
+
+  function updateBadges(bump) {
+    const c = cartCount(), w = state.wish.filter(getProduct).length;
+    const cb = $("#cartBadge"), wb = $("#wishBadge");
+    cb.textContent = c; cb.dataset.n = c; wb.textContent = w; wb.dataset.n = w;
+    $("#cartBtn").setAttribute("aria-label", t(S.cartCount, { n: c }));
+    $("#wishBtn").setAttribute("aria-label", t(S.wishCount, { n: w }));
+    if (bump) { const b = bump === "cart" ? $("#cartBtn") : wb; b.classList.remove("bump"); void b.offsetWidth; b.classList.add("bump"); }
+  }
+  function addToCart(id, btn) {
+    const p = getProduct(id); if (!p || !canBuy(p)) return;
+    const cur = state.cart[id] || 0;
+    if (cur >= spotsFree(p)) { toast(t(S.maxSpots)); return; }
+    state.cart[id] = cur + 1; persist();
+    slap(btn); updateBadges("cart"); renderCart();
+    toast(t(S.addedToCart, { name: t(p.name) }));
+  }
+  function setQty(id, qty) {
+    const p = getProduct(id);
+    if (qty <= 0) delete state.cart[id];
+    else state.cart[id] = Math.min(qty, p ? spotsFree(p) : qty);
+    persist(); updateBadges(); renderCart();
+  }
+  function toggleWish(id, btn) {
+    const p = getProduct(id); if (!p) return;
+    const i = state.wish.indexOf(id);
+    if (i >= 0) state.wish.splice(i, 1); else state.wish.push(id);
+    persist(); updateBadges("wish");
+    const on = i < 0;
+    $$(`.heart[data-id="${id}"]`).forEach((h) => { h.setAttribute("aria-pressed", on); h.setAttribute("aria-label", `${t(on ? UI.buttons.wishlistRemove : UI.buttons.wishlistAdd)}: ${t(p.name)}`); });
+    slap(btn); renderWish();
+    toast(t(on ? S.wishAdded : S.wishRemoved));
+  }
+  const emptyRoute = `<svg viewBox="0 0 220 44" aria-hidden="true"><path d="M16 18H204" stroke="#34343C" stroke-width="2" stroke-dasharray="2 6"/><rect x="6" y="12" width="12" height="12" fill="#FF2E88"/><rect x="202" y="12" width="12" height="12" fill="#7FD4FF"/><text x="12" y="42" font-size="11" text-anchor="middle" fill="#A0A0AA" font-family="Saira Condensed,sans-serif" font-weight="800" letter-spacing="1.5">SGN</text><text x="208" y="42" font-size="11" text-anchor="middle" fill="#A0A0AA" font-family="Saira Condensed,sans-serif" font-weight="800" letter-spacing="1.5">AMS</text></svg>`;
+
+  function renderCart() {
+    const lines = cartLines();
+    if (!lines.length) {
+      $("#cartBody").innerHTML = `<div class="emptyst">${emptyRoute}<p>${esc(t(UI.cart.empty))}</p><button class="btn btn--sm" type="button" data-action="browse">${esc(t(UI.buttons.continueShopping))}</button></div>`;
+      $("#cartFoot").innerHTML = `<button class="linkbtn" type="button" data-action="contact" style="justify-self:center">${esc(t(UI.buttons.contactToOrder))}</button>`;
+      return;
+    }
+    $("#cartBody").innerHTML = `<ul>${lines.map(({ p, qty }) => `<li class="line r-${rarityOf(p)}">
+      <span class="mini__vis emoji" aria-hidden="true">${p.visual.emoji}</span>
+      <div><p class="line__name">${esc(t(p.name))}</p><p class="line__meta">${tier(p)}${routeTag(p.origin)}<span>${esc(t(S.each, { price: money(p.priceEUR) }))}</span></p></div>
+      <p class="line__price">${moneyExact(p.priceEUR * qty)}</p>
+      <div class="line__ctrl">
+        <div class="qty" role="group" aria-label="${esc(t(UI.cart.quantity))}: ${esc(t(p.name))}">
+          <button type="button" data-action="qty" data-id="${p.id}" data-d="-1" aria-label="${esc(t(S.less))}">−</button>
+          <output aria-live="polite">${qty}</output>
+          <button type="button" data-action="qty" data-id="${p.id}" data-d="1" aria-label="${esc(t(S.more))}" ${qty >= spotsFree(p) ? "disabled" : ""}>+</button>
+        </div>
+        <button class="linkbtn" type="button" data-action="remove" data-id="${p.id}" aria-label="${esc(t(UI.buttons.remove))}: ${esc(t(p.name))}">${esc(t(UI.buttons.remove))}</button>
+      </div></li>`).join("")}</ul>
+      <p class="small" style="margin-top:14px">${esc(t(UI.cart.preorderNote))}</p>`;
+    $("#cartFoot").innerHTML = `<div class="sum"><div class="sum__row sum__row--total"><span>${esc(t(UI.cart.subtotal))}</span><span>${moneyExact(subtotal())}</span></div></div>
+      <button class="btn btn--block" type="button" data-action="checkout">${esc(t(UI.buttons.checkout))}</button>
+      <button class="linkbtn" type="button" data-action="contact" style="justify-self:center">${esc(t(UI.buttons.contactToOrder))}</button>`;
+  }
+
+  function renderWish() {
+    const items = state.wish.map(getProduct).filter(Boolean);
+    if (!items.length) {
+      $("#wishBody").innerHTML = `<div class="emptyst"><svg class="ico" style="width:56px;height:56px;color:var(--pink)" aria-hidden="true"><use href="#i-heart"/></svg><h3>${esc(t(UI.wishlist.emptyTitle))}</h3><p>${esc(t(UI.wishlist.emptyText))}</p><button class="btn btn--sm" type="button" data-action="browse">${esc(t(UI.buttons.continueShopping))}</button></div>`;
+      return;
+    }
+    $("#wishBody").innerHTML = `<ul>${items.map((p) => `<li class="line r-${rarityOf(p)}">
+      <span class="mini__vis emoji" aria-hidden="true">${p.visual.emoji}</span>
+      <div><p class="line__name"><button class="linkbtn" style="text-decoration:none;text-align:left;color:var(--tx);font:inherit;text-transform:inherit;padding:0" type="button" data-action="open-product" data-id="${p.id}">${esc(t(p.name))}</button></p><p class="line__meta">${tier(p)}${statusChip(p)}</p></div>
+      <p class="line__price">${money(p.priceEUR)}</p>
+      <div class="line__ctrl">${addBtn(p, "btn--sm")}<button class="linkbtn" type="button" data-action="wish" data-id="${p.id}">${esc(t(UI.buttons.remove))}</button></div></li>`).join("")}</ul>`;
+  }
+
+  /* ---- checkout ---- */
+  const co = { country: null, ship: null, pay: null, values: {} };
+  function shippingFor(country) {
+    const hasVN = cartLines().some((l) => l.p.origin === "VN");
+    const opts = UI.checkout.shippingOptions;
+    if (country === "VN") return opts.filter((o) => o.route.includes("VN"));
+    const base = opts.filter((o) => o.route === (country === "NL" ? "NL" : "EU"));
+    return hasVN ? base.concat(opts.filter((o) => o.route.includes("VN"))) : base;
+  }
+  function coSide() {
+    const lines = cartLines(), C = UI.checkout;
+    const ship = shippingFor(co.country).find((s) => s.id === co.ship);
+    return `<h3 id="coSum">${esc(t(S.summary))}</h3>
+        <ul>${lines.map((l) => `<li class="co__item"><span>${l.qty} × ${esc(t(l.p.name))}</span><span>${moneyExact(l.qty * l.p.priceEUR)}</span></li>`).join("")}</ul>
+        <div class="sum">
+          <div class="sum__row"><span>${esc(t(UI.cart.subtotal))}</span><span>${moneyExact(subtotal())}</span></div>
+          <div class="sum__row"><span>${esc(t(UI.cart.shipping))}</span><span>${ship ? moneyExact(ship.priceEUR) : "—"}</span></div>
+          <div class="sum__row sum__row--total"><span>${esc(t(UI.cart.total))}</span><span>${moneyExact(subtotal() + (ship ? ship.priceEUR : 0))}</span></div>
+        </div>
+        <p class="parent">${icon("shield")}<span>${esc(t(C.parentNudge))}</span></p>
+        <p class="small">${esc(t(UI.cart.preorderNote))}</p>
+        <p class="preview-pill">${esc(t(C.previewNotice))}</p>
+        <p class="f__err" id="coErr" aria-live="assertive"></p>
+        <button class="btn btn--block" type="submit">${esc(t(UI.buttons.placeOrder))}</button>
+        <button class="linkbtn" type="button" data-action="contact" style="justify-self:center">${esc(t(UI.buttons.contactToOrder))}</button>`;
+  }
+  function renderCheckout() {
+    const lines = cartLines();
+    if (!co.country) co.country = lines.length && lines.every((l) => l.p.origin === "NL") ? "VN" : "NL";
+    const ships = shippingFor(co.country);
+    if (!ships.some((s) => s.id === co.ship)) co.ship = ships[0] && ships[0].id;
+    const C = UI.checkout, cn = t(S.countries), v = co.values;
+    const field = (name, label, type = "text", ac = "", wide = false) => `<div class="f ${wide ? "f--wide" : ""}"><label for="co-${name}">${esc(t(label))}</label><input id="co-${name}" name="${name}" type="${type}" autocomplete="${ac}" value="${esc(v[name] || "")}" required aria-describedby="co-${name}-err"><span class="f__err" id="co-${name}-err" aria-live="polite"></span></div>`;
+    const payGroups = [["NL/EU", S.regionNLEU, (m) => m.region !== "VN"], ["VN", S.regionVN, (m) => m.region === "VN"]];
+    if (co.country === "VN") payGroups.reverse();
+    $("#coBody").innerHTML = `<form class="co" id="coForm" novalidate>
+      <div class="form">
+        <fieldset class="fset"><legend>${esc(t(C.yourDetails))}</legend>
+          <div class="fields fields--2">
+            ${field("name", C.name, "text", "name")}${field("email", C.email, "email", "email")}
+            ${field("address", C.address, "text", "street-address", true)}
+            ${field("postcode", C.postcode, "text", "postal-code")}${field("city", C.city, "text", "address-level2")}
+            <div class="f f--wide"><label for="co-country">${esc(t(C.country))}</label><select id="co-country" name="country">${["NL", "EU", "VN"].map((c) => `<option value="${c}" ${co.country === c ? "selected" : ""}>${esc(cn[c])}</option>`).join("")}</select></div>
+          </div>
+        </fieldset>
+        <fieldset class="fset"><legend>${esc(t(C.shippingTitle))}</legend>
+          <p class="small">${esc(t(S.shipHint))}</p>
+          <div class="radios">${ships.map((s) => `<label class="radio"><input type="radio" name="ship" value="${s.id}" ${s.id === co.ship ? "checked" : ""}>
+            <span class="radio__main"><b>${esc(t(s.label))}</b><small>${esc(t(C.days, { min: s.min, max: s.max }))}${s.route.includes("VN") && co.country !== "VN" ? ` — ${esc(t(S.directFromSgn))}` : ""}</small></span><span class="radio__price">${moneyExact(s.priceEUR)}</span></label>`).join("")}</div>
+        </fieldset>
+        <fieldset class="fset"><legend>${esc(t(C.paymentTitle))}</legend>
+          <p class="note note--yel">${esc(t(C.paymentPlanned))}</p>
+          ${payGroups.map(([, lab, fn]) => `<div class="paygroup"><h4>${esc(t(lab))}</h4><div class="radios">${C.paymentMethods.filter(fn).map((m) => `<label class="radio"><input type="radio" name="pay" value="${m.id}" ${co.pay === m.id ? "checked" : ""}><span class="radio__main"><b>${esc(t(m.label))}</b></span><span class="soon">${esc(t(S.comingSoon))}</span></label>`).join("")}</div></div>`).join("")}
+        </fieldset>
+      </div>
+      <aside class="co__side" id="coSide" aria-labelledby="coSum">${coSide()}</aside>
+    </form>`;
+  }
+  function readCheckout() {
+    const f = $("#coForm"); if (!f) return;
+    ["name", "email", "address", "postcode", "city"].forEach((n) => (co.values[n] = f.elements[n].value));
+    const s = f.querySelector('input[name="ship"]:checked'); if (s) co.ship = s.value;
+    const p = f.querySelector('input[name="pay"]:checked'); if (p) co.pay = p.value;
+  }
+  function placeOrder(e) {
+    e.preventDefault();
+    readCheckout();
+    const f = $("#coForm"); let firstBad = null;
+    ["name", "email", "address", "postcode", "city"].forEach((n) => {
+      const el = f.elements[n], val = el.value.trim();
+      const msg = !val ? t(S.required) : n === "email" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val) ? t(S.badEmail) : "";
+      el.setAttribute("aria-invalid", msg ? "true" : "false");
+      $("#co-" + n + "-err").textContent = msg;
+      if (msg && !firstBad) firstBad = el;
+    });
+    if (firstBad) { $("#coErr").textContent = t(S.fixErrors); firstBad.focus(); return; }
+    const lines = cartLines(), ship = shippingFor(co.country).find((s) => s.id === co.ship);
+    if (!lines.length) { closeAll(); return; }
+    const total = subtotal() + (ship ? ship.priceEUR : 0);
+    const alphabet = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";
+    let oc = "VB-"; for (let i = 0; i < 6; i++) oc += alphabet[Math.floor(Math.random() * alphabet.length)];
+    oc += "-" + (lines.some((l) => l.p.origin === "VN") ? "SGN" : "AMS");
+    const steps = t(S.trackSteps);
+    $("#confBody").innerHTML = `<div class="conf">
+      <p class="preview-pill">${esc(t(UI.checkout.previewNotice))}</p>
+      <h2 class="disp" id="confTitle">${esc(t(UI.checkout.confirmTitle))}</h2>
+      <p style="color:var(--tx-2)">${esc(t(UI.checkout.confirmText))}</p>
+      <div><p class="small">${esc(t(S.orderCode))}</p><p class="code">${oc}</p></div>
+      <div style="width:100%"><p class="small" style="margin-bottom:6px">${esc(t(S.trackTitle))}</p><ol class="track" aria-label="${esc(t(S.trackTitle))}: ${esc(steps.join(", "))}">${steps.map((s) => `<li>${esc(s)}</li>`).join("")}</ol></div>
+      <div class="sum" style="width:100%">
+        ${lines.map((l) => `<div class="sum__row"><span>${l.qty} × ${esc(t(l.p.name))}</span><span>${moneyExact(l.qty * l.p.priceEUR)}</span></div>`).join("")}
+        ${ship ? `<div class="sum__row"><span>${esc(t(ship.label))}</span><span>${moneyExact(ship.priceEUR)}</span></div>` : ""}
+        <div class="sum__row sum__row--total"><span>${esc(t(UI.cart.total))}</span><span>${moneyExact(total)}</span></div>
+      </div>
+      <button class="btn" type="button" data-action="browse">${esc(t(UI.buttons.continueShopping))}</button>
+    </div>`;
+    state.cart = {}; persist(); updateBadges(); renderCart();
+    co.pay = null;
+    closeAll(); openLayer("confirm", $("#cartBtn"));
+  }
+
+  /* ---------- 8. contact to order (preview: nothing is sent) ---------- */
+  function renderContact(preselect) {
+    const F = UI.contactForm, n = cartCount();
+    const opts = [`<option value="">${esc(t(F.itemPlaceholder))}</option>`]
+      .concat(n ? [`<option value="__cart" ${preselect === "__cart" ? "selected" : ""}>${esc(t(S.cartOption, { n }))}</option>`] : [])
+      .concat(getProducts().map((p) => `<option value="${p.id}" ${preselect === p.id ? "selected" : ""}>${esc(t(p.name))}${canBuy(p) ? "" : ` (${esc(t(UI.status[p.status]))})`}</option>`))
+      .concat([`<option value="__other" ${preselect === "__other" ? "selected" : ""}>${esc(t(S.otherItem))}</option>`]).join("");
+    $("#ctBody").innerHTML = `<form class="form" id="ctForm" novalidate>
+      <p style="color:var(--tx-2)">${esc(t(F.intro))}</p>
+      <div class="f"><label for="ct-name">${esc(t(F.name))}</label><input id="ct-name" name="name" autocomplete="name" required aria-describedby="ct-name-err"><span class="f__err" id="ct-name-err"></span></div>
+      <div class="f"><label for="ct-contact">${esc(t(F.contact))}</label><input id="ct-contact" name="contact" required placeholder="${esc(t(S.contactPlaceholder))}" aria-describedby="ct-contact-err"><span class="f__err" id="ct-contact-err"></span></div>
+      <div class="f"><label for="ct-item">${esc(t(F.item))}</label><select id="ct-item" name="item">${opts}</select></div>
+      <div class="f"><label for="ct-msg">${esc(t(F.message))}</label><textarea id="ct-msg" name="message"></textarea></div>
+      <p class="preview-pill">${esc(t(S.contactPreviewPill))}</p>
+      <button class="btn" type="submit">${esc(t(UI.buttons.send))}</button>
+    </form>`;
+  }
+  function submitContact(e) {
+    e.preventDefault();
+    const f = $("#ctForm"); let bad = null;
+    ["name", "contact"].forEach((n) => {
+      const el = f.elements[n], msg = el.value.trim() ? "" : t(S.required);
+      el.setAttribute("aria-invalid", msg ? "true" : "false"); $("#ct-" + n + "-err").textContent = msg;
+      if (msg && !bad) bad = el;
+    });
+    if (bad) { bad.focus(); return; }
+    // Preview only: nothing is sent anywhere.
+    $("#ctBody").innerHTML = `<div class="emptyst" style="justify-items:start;text-align:left;padding:8px 0">
+      ${emptyRoute}
+      <h3 tabindex="-1" id="ctDone">${esc(t(S.contactPreviewTitle))}</h3>
+      <p>${esc(t(UI.contactForm.sent))}</p>
+      <p class="code" style="font-size:22px;overflow-wrap:anywhere">${esc(UI.footer.email)}</p>
+      <button class="btn btn--sm btn--ghost" type="button" data-action="close">${esc(t(UI.buttons.close))}</button></div>`;
+    $("#ctDone").focus();
+  }
+  function openContact(preselect, opener) {
+    closeAll();
+    renderContact(preselect || (cartCount() ? "__cart" : ""));
+    openLayer("contact", opener);
+  }
+
+  /* ---------- 9. events (one delegated listener) ---------- */
+  document.addEventListener("click", (e) => {
+    const el = e.target.closest("[data-action]"); if (!el) return;
+    const a = el.dataset.action, id = el.dataset.id;
+    switch (a) {
+      case "lang": state.lang = el.dataset.lang; persist(); renderAll(); $(`#lang [data-lang="${state.lang}"]`).focus(); break;
+      case "filter-origin": state.filter.origin = el.dataset.v; renderShop(); $(`#fOrigin [data-v="${el.dataset.v}"]`).focus(); break;
+      case "filter-cat": state.filter.cat = el.dataset.v; renderShop(); $(`#fCat [data-v="${el.dataset.v}"]`).focus(); break;
+      case "filter-rarity": state.filter.rarity = el.dataset.v; renderShop(); $(`#fRarity [data-v="${el.dataset.v}"]`).focus(); break;
+      case "reset-filters": state.filter = { origin: "all", cat: "all", rarity: "all" }; renderShop(); $("#fOrigin .fbtn").focus(); break;
+      case "open-product": e.preventDefault(); openProduct(id, stack.length ? stack[0].opener : el); break;
+      case "add": addToCart(id, el); break;
+      case "wish": toggleWish(id, el); break;
+      case "open-cart": renderCart(); openLayer("cart", el); break;
+      case "open-wish": renderWish(); openLayer("wish", el); break;
+      case "close": closeTop(); break;
+      case "qty": setQty(id, (state.cart[id] || 0) + Number(el.dataset.d)); { const b = $(`#cartBody [data-action="qty"][data-id="${id}"][data-d="${el.dataset.d}"]`); b && !b.disabled ? b.focus() : $("#cartBody button") && $("#cartBody button").focus(); } break;
+      case "remove": setQty(id, 0); ($("#cartBody button") || $("#L-cart .x")).focus(); break;
+      case "checkout": { const o = stack.length ? stack[0].opener : el; closeAll(); co.country = null; renderCheckout(); openLayer("checkout", o); break; }
+      case "contact": openContact(id, stack.length ? stack[0].opener : el); break;
+      case "browse": closeAll(); document.getElementById("shop").scrollIntoView(); $("#fOrigin .fbtn").focus({ preventScroll: true }); break;
+      case "more-drops": state.allDrops = true; renderDrops(); { const m = $("#feed .msg"); m && m.querySelector("button") ? m.querySelector("button").focus() : null; } break;
+      case "goto-polls": closeAll(); document.getElementById("polls").scrollIntoView(); break;
+      case "vote": {
+        const poll = D.polls.find((p) => p.id === el.dataset.poll);
+        if (!poll || !poll.active || state.votes[poll.id]) return;
+        state.votes[poll.id] = el.dataset.opt; persist(); renderPolls(poll.id);
+        const mine = $(`#pollList [data-poll="${poll.id}"] .opt.is-mine`); mine && mine.focus();
+        break;
+      }
+    }
+  });
+  document.addEventListener("change", (e) => {
+    if (e.target.matches("#co-country")) { readCheckout(); co.country = e.target.value; renderCheckout(); $("#co-country").focus(); }
+    else if (e.target.matches('#coForm input[type="radio"]')) {
+      readCheckout();
+      const err = $("#coErr") ? $("#coErr").textContent : "";
+      $("#coSide").innerHTML = coSide(); $("#coErr").textContent = err;
+    }
+  });
+  document.addEventListener("submit", (e) => {
+    if (e.target.id === "coForm") placeOrder(e);
+    else if (e.target.id === "ctForm") submitContact(e);
+    else e.preventDefault();
+  });
+  function onHash() {
+    const h = location.hash.replace("#", "");
+    if (h === "wishlist") { closeAll(); renderWish(); openLayer("wish"); }
+    else if (h === "cart") { closeAll(); renderCart(); openLayer("cart"); }
+  }
+  window.addEventListener("hashchange", onHash);
+
+  /* ---------- 10. boot ---------- */
+  function renderAll() {
+    renderStatic(); renderShop(); renderDrops(); renderPolls(); renderSteps(); renderPlayers();
+    renderCart(); renderWish(); updateBadges(); tickClocks(); renderHud();
+    // re-render any open layer in the new language
+    stack.forEach(({ el }) => {
+      if (el.id === "L-checkout") { readCheckout(); renderCheckout(); }
+      if (el.id === "L-product") { const n = $("#pmBody .pm"); n && renderProductModal(n.dataset.id); }
+      if (el.id === "L-contact" && $("#ctForm")) renderContact($("#ct-item").value);
+    });
+  }
+  sanitizeCart(); persist();
+  renderAll();
+  setInterval(tickHud, 1000);
+  setInterval(tickClocks, 10000);
+  setInterval(() => { if (!stack.length) { renderShop(); renderDrops(); } }, 60000); // countdowns & relative times
+  onHash();
+})();
+</script>
+</body>
+</html>
