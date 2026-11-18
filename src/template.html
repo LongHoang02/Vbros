@@ -602,7 +602,7 @@ window.VBRO_SITE_TEXT = {
   more:         { en: "One more", nl: "Eentje erbij", vi: "Thêm một" },
   each:         { en: "{price} each", nl: "{price} per stuk", vi: "{price} mỗi món" },
   chatTitle:    { en: "Squad chat", nl: "Squad chat", vi: "Nhóm chat" },
-  chatMembers:  { en: "Duy, Dan, Tung and you", nl: "Duy, Dan, Tung en jij", vi: "Duy, Dan, Tung và bạn" },
+  chatMembers:  { en: "Duy, Dan, Tung and you", nl: "Duy, Dan, Tung en jij", vi: "Duy, Đan, Tùng và bạn" },
   dropsIntro:   { en: "What the squad spotted, restocked and shipped. Newest at the bottom.", nl: "Wat de squad spotte, weer binnen kreeg en verstuurde. Nieuwste onderaan.", vi: "Đội vừa săn gì, có hàng lại gì, gửi gì. Tin mới nhất ở dưới cùng." },
   pollIntro:    { en: "One vote per poll. Most votes = what we look for first.", nl: "Eén stem per poll. Meeste stemmen = waar we eerst naar zoeken.", vi: "Mỗi poll một phiếu. Nhiều phiếu nhất = tụi mình săn trước." },
   yourPick:     { en: "your pick", nl: "jouw keuze", vi: "bạn chọn" },
@@ -882,7 +882,7 @@ window.VBRO_SITE_TEXT = {
   const RARITIES = ["common", "rare", "epic", "legendary"];
   const rarityOf = (p) => (RARITIES.includes(p.rarity) ? p.rarity : "common");
   /** monogram for a founder: first + last letter (Duy → DY, Tung → TG) */
-  const monoTxt = (f) => { const n = String(f.name || "?"); return (n[0] + (n.length > 1 ? n[n.length - 1] : "")).toUpperCase(); };
+  const monoTxt = (f) => { const n = String(t(f.name) || "?"); return (n[0] + (n.length > 1 ? n[n.length - 1] : "")).toUpperCase(); };
   const mono = (f, size = "") => `<span class="mono ${size ? "mono--" + size : ""} m-${esc(f.id)}" aria-hidden="true">${esc(monoTxt(f))}</span>`;
   /** big outlined code on the loot slot: initials of the English name */
   const code = (p) => (p.name.en || "").split(/[\s-]+/).filter((w) => /^[A-Za-z]/.test(w)).slice(0, 2).map((w) => w[0]).join("").toUpperCase();
@@ -1026,7 +1026,7 @@ window.VBRO_SITE_TEXT = {
     const spot = withSpotter ? founder(p.spottedBy) : null;
     return `<div class="vis"${withSpotter ? ` data-action="open-product" data-id="${p.id}"` : ""}>
       <span class="vis__code" aria-hidden="true">${esc(code(p))}</span>
-      ${spot ? `<span class="vis__spot">${mono(spot)}<span>${esc(t(UI.product.spottedBy, { name: spot.name }))}</span></span>` : ""}
+      ${spot ? `<span class="vis__spot">${mono(spot)}<span>${esc(t(UI.product.spottedBy, { name: t(spot.name) }))}</span></span>` : ""}
       ${heartBtn(p)}
       <span class="vis__emoji emoji" role="img" aria-label="${esc(t(p.name))}">${p.visual.emoji}</span>
     </div>`;
@@ -1092,7 +1092,7 @@ window.VBRO_SITE_TEXT = {
       html += `<li class="msg msg--${cc.toLowerCase()}">
         ${mono(f, "md")}
         <article class="msg__body">
-          <div class="msg__meta"><span class="msg__who">${esc(f.name)}</span><span class="tagchip tag--${esc(d.tag)}">${esc(t(UI.dropTags[d.tag]))}</span></div>
+          <div class="msg__meta"><span class="msg__who">${esc(t(f.name))}</span><span class="tagchip tag--${esc(d.tag)}">${esc(t(UI.dropTags[d.tag]))}</span></div>
           <p class="msg__text">${esc(t(d.text))}</p>
           ${p ? miniProduct(p) : ""}
           <p class="msg__when"><time datetime="${esc(d.timestamp)}" title="${esc(fullStamp(date, cc))} ${cc}"><b>${clock(date, cc)} ${cc}</b></time><span>${esc(d.city)}</span><span>${esc(relTime(date))}</span></p>
@@ -1139,7 +1139,7 @@ window.VBRO_SITE_TEXT = {
       const cc = cityCode(f);
       return `<li class="player m-${esc(f.id)}">
         <div class="player__hd">${mono(f, "lg")}<span class="player__city"><b><span class="emoji" aria-hidden="true">${flagEmoji(f.flag)}</span> ${cc}</b><span>${esc(f.city)}</span></span></div>
-        <h3 class="player__name">${esc(f.name)}<span class="player__role lbl">${esc(t(f.squadRole))}</span></h3>
+        <h3 class="player__name">${esc(t(f.name))}<span class="player__role lbl">${esc(t(f.squadRole))}</span></h3>
         <p class="player__handle">${esc(f.handle)}</p>
         <p class="player__bio">${esc(t(f.role))}</p>
         <p class="player__time"><span>${esc(t(S.localTime))}</span><b data-clock="${cc}">--:--</b></p>
@@ -1259,7 +1259,7 @@ window.VBRO_SITE_TEXT = {
         ${note}
         <div class="pm__row"><p class="price"><span class="price__eur" style="font-size:40px">${money(p.priceEUR)}</span><span class="price__vnd">${esc(vnd(p))}</span></p></div>
         <div class="pm__actions">${addBtn(p)}<button class="btn btn--ghost" type="button" data-action="contact" data-id="${p.id}">${esc(t(UI.buttons.contactToOrder))}</button></div>
-        <div class="pm__spotted">${mono(f, "md")}<div><p style="font-weight:700">${esc(t(UI.product.spottedBy, { name: f.name }))} <span class="muted" style="font-weight:400">· ${esc(t(f.squadRole))}</span></p><p class="small">${esc(f.handle)}, ${esc(f.city)}</p></div></div>
+        <div class="pm__spotted">${mono(f, "md")}<div><p style="font-weight:700">${esc(t(UI.product.spottedBy, { name: t(f.name) }))} <span class="muted" style="font-weight:400">· ${esc(t(f.squadRole))}</span></p><p class="small">${esc(f.handle)}, ${esc(f.city)}</p></div></div>
       </div></div>`;
   }
   function openProduct(id, opener) {

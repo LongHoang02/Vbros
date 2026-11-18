@@ -65,7 +65,9 @@ window.VBRO_DATA = {
      -------------------------------------------------------------------
      • id      : short code, lowercase, no spaces. Products & drops use it
                  in "spottedBy" / "author" to say who found / posted it.
-     • name    : FIRST NAME ONLY
+     • name    : FIRST NAME ONLY. Plain text ("Duy"), or 3 languages
+                 when the Vietnamese spelling differs:
+                 { en: "Dan", nl: "Dan", vi: "Đan" }
      • city    : where they live
      • flag    : "NL" or "VN"
      • handle  : their social handle
@@ -95,7 +97,7 @@ window.VBRO_DATA = {
     // ↑↑↑ end of example ↑↑↑
     {
       id: "dan",
-      name: "Dan",
+      name: { en: "Dan", nl: "Dan", vi: "Đan" },
       city: "Amsterdam",
       flag: "NL",
       handle: "@dan.ams",
@@ -109,7 +111,7 @@ window.VBRO_DATA = {
     },
     {
       id: "tung",
-      name: "Tung",
+      name: { en: "Tung", nl: "Tung", vi: "Tùng" },
       city: "Sài Gòn",
       flag: "VN",
       handle: "@tung.sgn",
@@ -480,7 +482,7 @@ window.VBRO_DATA = {
       hype: {
         en: "Magnetic, smooth, stupid fast. Dan's personal best dropped 4 seconds.",
         nl: "Magnetisch, soepel, belachelijk snel. Dan z'n PB ging 4 seconden omlaag.",
-        vi: "Có nam châm, xoay mượt, nhanh khó tin. Dan phá luôn kỷ lục cá nhân, nhanh hơn 4 giây."
+        vi: "Có nam châm, xoay mượt, nhanh khó tin. Đan phá luôn kỷ lục cá nhân, nhanh hơn 4 giây."
       },
       description: {
         en: "Magnetic 3×3 speed cube with adjustable tension, made by a small Dutch cube shop. Stickerless, so no peeling ever.",
@@ -677,7 +679,7 @@ window.VBRO_DATA = {
       question: {
         en: "What should Tung bring from Sài Gòn next?",
         nl: "Wat moet Tung als volgende uit Sài Gòn meenemen?",
-        vi: "Đợt tới Tung nên mang gì từ Sài Gòn qua?"
+        vi: "Đợt tới Tùng nên mang gì từ Sài Gòn qua?"
       },
       options: [
         {
@@ -730,7 +732,7 @@ window.VBRO_DATA = {
       question: {
         en: "What should Duy & Dan send to Sài Gòn next?",
         nl: "Wat moeten Duy en Dan als volgende naar Sài Gòn sturen?",
-        vi: "Duy với Dan nên gửi gì về Sài Gòn tiếp?"
+        vi: "Duy với Đan nên gửi gì về Sài Gòn tiếp?"
       },
       options: [
         {
@@ -835,7 +837,7 @@ window.VBRO_DATA = {
       subline: {
         en: "Duy & Dan in Amsterdam, Tung in Sài Gòn. They spot it first, you lock in a pre-order spot, the squad carries it 9,800 km to you.",
         nl: "Duy en Dan in Amsterdam, Tung in Sài Gòn. Zij spotten het als eerste, jij lockt een pre-orderplek, de squad brengt het 9.800 km naar jou.",
-        vi: "Duy với Dan ở Amsterdam, Tung ở Sài Gòn. Tụi mình săn trước, bạn chốt suất đặt trước, cả đội xách về 9.800 cây số tới tay bạn."
+        vi: "Duy với Đan ở Amsterdam, Tùng ở Sài Gòn. Tụi mình săn trước, bạn chốt suất đặt trước, cả đội xách về 9.800 cây số tới tay bạn."
       },
       ctaPrimary:   { en: "See the loot",        nl: "Check de loot",       vi: "Xem kho đồ" },
       ctaSecondary: { en: "How pre-order works", nl: "Zo werkt pre-orderen", vi: "Đặt trước là sao?" },
@@ -993,7 +995,7 @@ window.VBRO_DATA = {
     story: {
       en: "Duy and Dan grew up in Amsterdam, Tung lives in Sài Gòn. Every time someone visited, the suitcase came back full of stuff friends kept asking about — snacks, card games, little things you just can't find on the other side. So we turned it into VBros: we spot it, you pre-order, we bring it over. Two cities, one group chat, zero middlemen.",
       nl: "Duy en Dan zijn opgegroeid in Amsterdam, Tung woont in Sài Gòn. Elke keer als iemand op bezoek ging, kwam de koffer terug vol spullen waar vrienden steeds naar vroegen: snacks, kaartspellen, kleine dingen die je aan de andere kant gewoon niet vindt. Dus hebben we er VBros van gemaakt: wij spotten het, jij pre-ordert, wij nemen het mee. Twee steden, één groepsapp, geen tussenpersonen.",
-      vi: "Duy với Dan lớn lên ở Amsterdam, còn Tung sống ở Sài Gòn. Mỗi lần có ai qua lại, vali về là đầy đồ mà tụi bạn cứ hỏi hoài — snack, game bài, mấy món nhỏ nhỏ bên kia không có. Vậy là tụi mình lập ra VBros: tụi mình săn, bạn đặt trước, tụi mình mang về. Hai thành phố, một group chat, không qua trung gian."
+      vi: "Duy với Đan lớn lên ở Amsterdam, còn Tùng sống ở Sài Gòn. Mỗi lần có ai qua lại, vali về là đầy đồ mà tụi bạn cứ hỏi hoài — snack, game bài, mấy món nhỏ nhỏ bên kia không có. Vậy là tụi mình lập ra VBros: tụi mình săn, bạn đặt trước, tụi mình mang về. Hai thành phố, một group chat, không qua trung gian."
     },
 
     /* --- Wishlist --- */
@@ -1151,7 +1153,7 @@ window.VBRO_DATA = {
       runBy: {
         en: "VBros is run by Duy, Dan & Tung, with their parents as legal operators.",
         nl: "VBros wordt gerund door Duy, Dan & Tung. Hun ouders zijn officieel de exploitanten.",
-        vi: "VBros do Duy, Dan & Tung vận hành, với ba mẹ là người đại diện pháp lý."
+        vi: "VBros do Duy, Đan & Tùng vận hành, với ba mẹ là người đại diện pháp lý."
       },
       kvk:     { en: "KvK: [KvK pending]",   nl: "KvK: [KvK pending]",   vi: "KvK: [KvK pending]" },
       address: { en: "Address: [address pending]", nl: "Adres: [adres volgt]", vi: "Địa chỉ: [đang cập nhật]" },

@@ -630,7 +630,9 @@ window.VBRO_DATA = {
      -------------------------------------------------------------------
      • id      : short code, lowercase, no spaces. Products & drops use it
                  in "spottedBy" / "author" to say who found / posted it.
-     • name    : FIRST NAME ONLY
+     • name    : FIRST NAME ONLY. Plain text ("Duy"), or 3 languages
+                 when the Vietnamese spelling differs:
+                 { en: "Dan", nl: "Dan", vi: "Đan" }
      • city    : where they live
      • flag    : "NL" or "VN"
      • handle  : their social handle
@@ -660,7 +662,7 @@ window.VBRO_DATA = {
     // ↑↑↑ end of example ↑↑↑
     {
       id: "dan",
-      name: "Dan",
+      name: { en: "Dan", nl: "Dan", vi: "Đan" },
       city: "Amsterdam",
       flag: "NL",
       handle: "@dan.ams",
@@ -674,7 +676,7 @@ window.VBRO_DATA = {
     },
     {
       id: "tung",
-      name: "Tung",
+      name: { en: "Tung", nl: "Tung", vi: "Tùng" },
       city: "Sài Gòn",
       flag: "VN",
       handle: "@tung.sgn",
@@ -1045,7 +1047,7 @@ window.VBRO_DATA = {
       hype: {
         en: "Magnetic, smooth, stupid fast. Dan's personal best dropped 4 seconds.",
         nl: "Magnetisch, soepel, belachelijk snel. Dan z'n PB ging 4 seconden omlaag.",
-        vi: "Có nam châm, xoay mượt, nhanh khó tin. Dan phá luôn kỷ lục cá nhân, nhanh hơn 4 giây."
+        vi: "Có nam châm, xoay mượt, nhanh khó tin. Đan phá luôn kỷ lục cá nhân, nhanh hơn 4 giây."
       },
       description: {
         en: "Magnetic 3×3 speed cube with adjustable tension, made by a small Dutch cube shop. Stickerless, so no peeling ever.",
@@ -1242,7 +1244,7 @@ window.VBRO_DATA = {
       question: {
         en: "What should Tung bring from Sài Gòn next?",
         nl: "Wat moet Tung als volgende uit Sài Gòn meenemen?",
-        vi: "Đợt tới Tung nên mang gì từ Sài Gòn qua?"
+        vi: "Đợt tới Tùng nên mang gì từ Sài Gòn qua?"
       },
       options: [
         {
@@ -1295,7 +1297,7 @@ window.VBRO_DATA = {
       question: {
         en: "What should Duy & Dan send to Sài Gòn next?",
         nl: "Wat moeten Duy en Dan als volgende naar Sài Gòn sturen?",
-        vi: "Duy với Dan nên gửi gì về Sài Gòn tiếp?"
+        vi: "Duy với Đan nên gửi gì về Sài Gòn tiếp?"
       },
       options: [
         {
@@ -1400,7 +1402,7 @@ window.VBRO_DATA = {
       subline: {
         en: "Duy & Dan in Amsterdam, Tung in Sài Gòn. They spot it first, you lock in a pre-order spot, the squad carries it 9,800 km to you.",
         nl: "Duy en Dan in Amsterdam, Tung in Sài Gòn. Zij spotten het als eerste, jij lockt een pre-orderplek, de squad brengt het 9.800 km naar jou.",
-        vi: "Duy với Dan ở Amsterdam, Tung ở Sài Gòn. Tụi mình săn trước, bạn chốt suất đặt trước, cả đội xách về 9.800 cây số tới tay bạn."
+        vi: "Duy với Đan ở Amsterdam, Tùng ở Sài Gòn. Tụi mình săn trước, bạn chốt suất đặt trước, cả đội xách về 9.800 cây số tới tay bạn."
       },
       ctaPrimary:   { en: "See the loot",        nl: "Check de loot",       vi: "Xem kho đồ" },
       ctaSecondary: { en: "How pre-order works", nl: "Zo werkt pre-orderen", vi: "Đặt trước là sao?" },
@@ -1558,7 +1560,7 @@ window.VBRO_DATA = {
     story: {
       en: "Duy and Dan grew up in Amsterdam, Tung lives in Sài Gòn. Every time someone visited, the suitcase came back full of stuff friends kept asking about — snacks, card games, little things you just can't find on the other side. So we turned it into VBros: we spot it, you pre-order, we bring it over. Two cities, one group chat, zero middlemen.",
       nl: "Duy en Dan zijn opgegroeid in Amsterdam, Tung woont in Sài Gòn. Elke keer als iemand op bezoek ging, kwam de koffer terug vol spullen waar vrienden steeds naar vroegen: snacks, kaartspellen, kleine dingen die je aan de andere kant gewoon niet vindt. Dus hebben we er VBros van gemaakt: wij spotten het, jij pre-ordert, wij nemen het mee. Twee steden, één groepsapp, geen tussenpersonen.",
-      vi: "Duy với Dan lớn lên ở Amsterdam, còn Tung sống ở Sài Gòn. Mỗi lần có ai qua lại, vali về là đầy đồ mà tụi bạn cứ hỏi hoài — snack, game bài, mấy món nhỏ nhỏ bên kia không có. Vậy là tụi mình lập ra VBros: tụi mình săn, bạn đặt trước, tụi mình mang về. Hai thành phố, một group chat, không qua trung gian."
+      vi: "Duy với Đan lớn lên ở Amsterdam, còn Tùng sống ở Sài Gòn. Mỗi lần có ai qua lại, vali về là đầy đồ mà tụi bạn cứ hỏi hoài — snack, game bài, mấy món nhỏ nhỏ bên kia không có. Vậy là tụi mình lập ra VBros: tụi mình săn, bạn đặt trước, tụi mình mang về. Hai thành phố, một group chat, không qua trung gian."
     },
 
     /* --- Wishlist --- */
@@ -1716,7 +1718,7 @@ window.VBRO_DATA = {
       runBy: {
         en: "VBros is run by Duy, Dan & Tung, with their parents as legal operators.",
         nl: "VBros wordt gerund door Duy, Dan & Tung. Hun ouders zijn officieel de exploitanten.",
-        vi: "VBros do Duy, Dan & Tung vận hành, với ba mẹ là người đại diện pháp lý."
+        vi: "VBros do Duy, Đan & Tùng vận hành, với ba mẹ là người đại diện pháp lý."
       },
       kvk:     { en: "KvK: [KvK pending]",   nl: "KvK: [KvK pending]",   vi: "KvK: [KvK pending]" },
       address: { en: "Address: [address pending]", nl: "Adres: [adres volgt]", vi: "Địa chỉ: [đang cập nhật]" },
@@ -1775,7 +1777,7 @@ window.VBRO_SITE_TEXT = {
   more:         { en: "One more", nl: "Eentje erbij", vi: "Thêm một" },
   each:         { en: "{price} each", nl: "{price} per stuk", vi: "{price} mỗi món" },
   chatTitle:    { en: "Squad chat", nl: "Squad chat", vi: "Nhóm chat" },
-  chatMembers:  { en: "Duy, Dan, Tung and you", nl: "Duy, Dan, Tung en jij", vi: "Duy, Dan, Tung và bạn" },
+  chatMembers:  { en: "Duy, Dan, Tung and you", nl: "Duy, Dan, Tung en jij", vi: "Duy, Đan, Tùng và bạn" },
   dropsIntro:   { en: "What the squad spotted, restocked and shipped. Newest at the bottom.", nl: "Wat de squad spotte, weer binnen kreeg en verstuurde. Nieuwste onderaan.", vi: "Đội vừa săn gì, có hàng lại gì, gửi gì. Tin mới nhất ở dưới cùng." },
   pollIntro:    { en: "One vote per poll. Most votes = what we look for first.", nl: "Eén stem per poll. Meeste stemmen = waar we eerst naar zoeken.", vi: "Mỗi poll một phiếu. Nhiều phiếu nhất = tụi mình săn trước." },
   yourPick:     { en: "your pick", nl: "jouw keuze", vi: "bạn chọn" },
@@ -2055,7 +2057,7 @@ window.VBRO_SITE_TEXT = {
   const RARITIES = ["common", "rare", "epic", "legendary"];
   const rarityOf = (p) => (RARITIES.includes(p.rarity) ? p.rarity : "common");
   /** monogram for a founder: first + last letter (Duy → DY, Tung → TG) */
-  const monoTxt = (f) => { const n = String(f.name || "?"); return (n[0] + (n.length > 1 ? n[n.length - 1] : "")).toUpperCase(); };
+  const monoTxt = (f) => { const n = String(t(f.name) || "?"); return (n[0] + (n.length > 1 ? n[n.length - 1] : "")).toUpperCase(); };
   const mono = (f, size = "") => `<span class="mono ${size ? "mono--" + size : ""} m-${esc(f.id)}" aria-hidden="true">${esc(monoTxt(f))}</span>`;
   /** big outlined code on the loot slot: initials of the English name */
   const code = (p) => (p.name.en || "").split(/[\s-]+/).filter((w) => /^[A-Za-z]/.test(w)).slice(0, 2).map((w) => w[0]).join("").toUpperCase();
@@ -2199,7 +2201,7 @@ window.VBRO_SITE_TEXT = {
     const spot = withSpotter ? founder(p.spottedBy) : null;
     return `<div class="vis"${withSpotter ? ` data-action="open-product" data-id="${p.id}"` : ""}>
       <span class="vis__code" aria-hidden="true">${esc(code(p))}</span>
-      ${spot ? `<span class="vis__spot">${mono(spot)}<span>${esc(t(UI.product.spottedBy, { name: spot.name }))}</span></span>` : ""}
+      ${spot ? `<span class="vis__spot">${mono(spot)}<span>${esc(t(UI.product.spottedBy, { name: t(spot.name) }))}</span></span>` : ""}
       ${heartBtn(p)}
       <span class="vis__emoji emoji" role="img" aria-label="${esc(t(p.name))}">${p.visual.emoji}</span>
     </div>`;
@@ -2265,7 +2267,7 @@ window.VBRO_SITE_TEXT = {
       html += `<li class="msg msg--${cc.toLowerCase()}">
         ${mono(f, "md")}
         <article class="msg__body">
-          <div class="msg__meta"><span class="msg__who">${esc(f.name)}</span><span class="tagchip tag--${esc(d.tag)}">${esc(t(UI.dropTags[d.tag]))}</span></div>
+          <div class="msg__meta"><span class="msg__who">${esc(t(f.name))}</span><span class="tagchip tag--${esc(d.tag)}">${esc(t(UI.dropTags[d.tag]))}</span></div>
           <p class="msg__text">${esc(t(d.text))}</p>
           ${p ? miniProduct(p) : ""}
           <p class="msg__when"><time datetime="${esc(d.timestamp)}" title="${esc(fullStamp(date, cc))} ${cc}"><b>${clock(date, cc)} ${cc}</b></time><span>${esc(d.city)}</span><span>${esc(relTime(date))}</span></p>
@@ -2312,7 +2314,7 @@ window.VBRO_SITE_TEXT = {
       const cc = cityCode(f);
       return `<li class="player m-${esc(f.id)}">
         <div class="player__hd">${mono(f, "lg")}<span class="player__city"><b><span class="emoji" aria-hidden="true">${flagEmoji(f.flag)}</span> ${cc}</b><span>${esc(f.city)}</span></span></div>
-        <h3 class="player__name">${esc(f.name)}<span class="player__role lbl">${esc(t(f.squadRole))}</span></h3>
+        <h3 class="player__name">${esc(t(f.name))}<span class="player__role lbl">${esc(t(f.squadRole))}</span></h3>
         <p class="player__handle">${esc(f.handle)}</p>
         <p class="player__bio">${esc(t(f.role))}</p>
         <p class="player__time"><span>${esc(t(S.localTime))}</span><b data-clock="${cc}">--:--</b></p>
@@ -2432,7 +2434,7 @@ window.VBRO_SITE_TEXT = {
         ${note}
         <div class="pm__row"><p class="price"><span class="price__eur" style="font-size:40px">${money(p.priceEUR)}</span><span class="price__vnd">${esc(vnd(p))}</span></p></div>
         <div class="pm__actions">${addBtn(p)}<button class="btn btn--ghost" type="button" data-action="contact" data-id="${p.id}">${esc(t(UI.buttons.contactToOrder))}</button></div>
-        <div class="pm__spotted">${mono(f, "md")}<div><p style="font-weight:700">${esc(t(UI.product.spottedBy, { name: f.name }))} <span class="muted" style="font-weight:400">· ${esc(t(f.squadRole))}</span></p><p class="small">${esc(f.handle)}, ${esc(f.city)}</p></div></div>
+        <div class="pm__spotted">${mono(f, "md")}<div><p style="font-weight:700">${esc(t(UI.product.spottedBy, { name: t(f.name) }))} <span class="muted" style="font-weight:400">· ${esc(t(f.squadRole))}</span></p><p class="small">${esc(f.handle)}, ${esc(f.city)}</p></div></div>
       </div></div>`;
   }
   function openProduct(id, opener) {
