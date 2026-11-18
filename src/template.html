@@ -714,7 +714,7 @@ window.VBRO_SITE_TEXT = {
 <section class="sec" id="shop" aria-labelledby="shopTitle">
   <div class="wrap">
     <div class="sec__head">
-      <div><span class="lbl sec__kicker" style="color:var(--yel)" data-t="ui.sections.products"></span><h2 class="disp" id="shopTitle" data-t="ui.sections.loot"></h2></div>
+      <div><span class="lbl sec__kicker" style="color:var(--yel)" data-t="ui.sections.products"></span><h2 class="disp" id="shopTitle" data-t="ui.hero.headline"></h2></div>
       <p data-t="site.shopIntro"></p>
     </div>
     <div class="filters">
@@ -982,7 +982,7 @@ window.VBRO_SITE_TEXT = {
     document.documentElement.lang = state.lang;
     $$("[data-t]").forEach((el) => { const v = path(el.dataset.t); if (v != null) el.textContent = t(v); });
     $$("[data-t-aria]").forEach((el) => { const v = path(el.dataset.tAria); if (v != null) el.setAttribute("aria-label", t(v)); });
-    const tg = t(UI.hero.headlineLines) || [t(UI.hero.headline), ""];
+    const tg = t(UI.hero.lootLines) || t(UI.hero.headlineLines) || [t(UI.hero.headline), ""];
     $("#tag1").textContent = tg[0]; $("#tag2").textContent = tg[1] || "";
     $("#ftrEmail").textContent = UI.footer.email;
     $("#ftrEmail2").textContent = UI.footer.email;

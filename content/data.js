@@ -824,6 +824,14 @@ window.VBRO_DATA = {
         nl: ["Daar gespot.", "Hier gebracht."],
         vi: ["Thấy bên kia,", "xách về bên này."]
       },
+      // The BIG headline at the very top of the home page, in 2 lines
+      // (2nd line in lime). "Spotted there. Carried here." is now the
+      // title above the loot grid.
+      lootLines: {
+        en: ["Loot from", "two worlds."],
+        nl: ["Loot uit", "twee werelden."],
+        vi: ["Đồ xịn từ", "hai thế giới."]
+      },
       subline: {
         en: "Duy & Dan in Amsterdam, Tung in Sài Gòn. They spot it first, you lock in a pre-order spot, the squad carries it 9,800 km to you.",
         nl: "Duy en Dan in Amsterdam, Tung in Sài Gòn. Zij spotten het als eerste, jij lockt een pre-orderplek, de squad brengt het 9.800 km naar jou.",
