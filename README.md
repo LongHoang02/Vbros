@@ -6,7 +6,7 @@ Run by Duy, Dan & Tung, with their parents as the legal operators.
 > **Preview version.** No payments are taken and no orders or messages are sent yet.
 
 ## Live site
-GitHub Pages: `https://brotobro.github.io/Vbros/`
+GitHub Pages: `https://bro-to-bro.github.io/Vbros/`
 (Turn on in **Settings → Pages → Deploy from a branch → `main` / `(root)`**.)
 
 ## How to add loot, drops and polls
